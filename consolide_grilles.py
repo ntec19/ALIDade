@@ -8,13 +8,16 @@
 ################################################################
 # CONSTANTES :
 
-# diplômes possibles :1
+# diplômes possibles :
 DIPLOMES        = {'31212': "Métiers de l'accueil",
                    '31213': "Met.com.ven.op.A Ani.ges.esp.com.",
-                   '31214': "Met.com.ven.Op.B Pr.cl.va.of.com."}  # !!todo!! : manque 1 diplôme (CAP)
+                   '31214': "Met.com.ven.Op.B Pr.cl.va.of.com.",
+                   '31224': "CAP Équipier polyvalent du commerce"}  # !!todo!! : vérifier code CAP EPC
+
 DIPLOMES_COURTS = {'31212': "bacpro_MA",
                    '31213': "bacpro_MVC_A_AGEC",
-                   '31214': "bacpro_MVC_B_PC"}                    # !!todo!! : manque 1 diplôme (CAP)
+                   '31214': "bacpro_MVC_B_PC",
+                   '31224': "CAP_EPC"}                              # !!todo!! : vérifier code CAP EPC
 
 # préfixe répertoire
 INDIV_FOLDER    = 'candidats_'
@@ -22,14 +25,7 @@ INDIV_FOLDER    = 'candidats_'
 # fichiers "source de données" : CYCLADE
 CYCLADE_PREFIX = "cyclade"  # les fichiers CSV exportés de Cyclade doivent être commencés par ...
 
-# old :
-LIST_FILE       = 'DOSSIER ETABLISSEMENT CAP EPC.xlsx'
-LIST_SHEET      = 'RECAPNOTES'
-LIST_RANGE      = (12, 1, 46, 3)  # ie : début = L12, C1 ; fin = L46, C3
-
-
 # fichiers "modèles" :
-TEMPLATE_FILES  = ['31212.xlsx', '31213.xlsx', '31214.xlsx']
 TEMPLATE_SHEET  = '1-Candidat, établissement'
 TEMPLATE_DICT   = {'session': 'A3',
                    'etab': 'A4',
@@ -75,7 +71,6 @@ try:
     import os
     import time
     import shutil
-    import csv
 except:
     print("❌ Une des bibliothèques standards est manquante !\n")
     sys.exit(1)
@@ -130,7 +125,6 @@ info("Début du traitement...")
 ################################################################
 # déterminer le répertoire 'établissement'
 # ie. : candidats_0921234A
-
 # récupérer une liste de tous les répertoires du répertoire courant
 folders     = os.listdir(".")
 folders     = [f for f in folders if os.path.isdir(f)]  # exclure les fichiers
@@ -142,29 +136,33 @@ folders     = [f for f in folders if len(f[len(INDIV_FOLDER):]) == 8]
 folders     = [f for f in folders if f[len(INDIV_FOLDER):len(INDIV_FOLDER) + 7].isdigit()]
 # filtrer les répertoires dont le nom continue par 1 lettre
 folders     = [f for f in folders if f[len(INDIV_FOLDER) + 7:].isalpha()]
-
 if len(folders) == 0:
     print(f"❌ Un problème est survenu (pas de dossier candidats trouvé) !\n")
     sys.exit()
 if len(folders) != 1:
     print(f"❌ Un problème est survenu (ambiguïté sur les dossiers candidats) !\n")
+    print(folders)
     sys.exit()
-
 candidats_folder = folders[0] 
-info("Dossier candidats trouvé : "+candidats_folder)
+uai = candidats_folder[len(INDIV_FOLDER):]
+info(f"UAI : {uai} - Dossier candidats trouvé : {candidats_folder}")
+
 
 ################################################################
 # déterminer les sous-répertoires 'diplômes' du répertoire 'établissement'
 
-# récupérer une liste de tous les répertoires du répertoire 'établissement'
+# récupérer une liste de tous les fichiers du répertoire 'établissement'
 folders_diplomes    = os.listdir("./" + candidats_folder)
 folders_diplomes     = [f for f in folders_diplomes if os.path.isdir("./" + candidats_folder + "/" + f)]  # exclure les fichiers
 # vérifier que les noms des dossiers diplômes commencent bien par un code connu (32212, etc.)
-for f in folders_diplomes:
-    if f[0:5] not in DIPLOMES.keys():
-        print(f"❌ Un problème est survenu avec ce dossier diplôme non conforme : {f} !\n")
+for folder in folders_diplomes:
+    if folder[0:5] not in DIPLOMES.keys():
+        print(f"❌ Un problème est survenu avec ce dossier diplôme non conforme : {folder} !\n")
         sys.exit()
+# trier par ordre alpha
+folders_diplomes.sort()
 
+# affichage intermédiaire : nombre de dossiers et noms de ces dossiers
 message     =  "Nombre de dossiers 'diplômes' trouvés : "
 message     += str(len(folders_diplomes)) + " :\n\t"
 message     += "\n\t".join(folders_diplomes)
@@ -172,12 +170,95 @@ info(message)
 touche()
 
 
-# to be continued !
+################################################################
+# vérifier l'existence des fichiers modèle ETABLISSEMENT nécessaires
+
+# récupérer une liste de tous les fichiers
+files = os.listdir(".")
+files = [f for f in files if os.path.isfile(f)]  # exclure les répertoires
+
+for folder in folders_diplomes:
+    if folder[:5] + "_etab.xlsx" not in files:
+        print(f"❌ Un problème est survenu : fichier modèle établisement  {folder[:5]}_etab.xlsx inexistant !\n")
+        sys.exit()
+
+
+################################################################
+# pour chaque dossier diplome trouvé,
+#     pour chaque fichier dans le dossier diplome
+#         traitement :
+
+# on boucle sur chaque dossier :
+for folder in folders_diplomes:
+    # récupérer le code diplôme
+    code_diplome = folder[:5]
+    # copie du fichier modèle
+    source = code_diplome + "_etab.xlsx"
+    destination = code_diplome + "_" + uai + "_" + DIPLOMES_COURTS[code_diplome] + ".xlsx"
+    shutil.copyfile(source, destination)
+    # récupérer le chemin relatif du dossier
+    current_folder = "./" + candidats_folder + "/" + folder + "/"
+    # récupérer la liste de tous ses fichiers
+    files = os.listdir(current_folder)
+    files = [f for f in files if os.path.isfile(current_folder + "/" + f)]  # exclure les répertoires
+    if len(files) == 0:
+        print(f"❌ Un problème est survenu : dossier {current_folder} vide !\n")
+        sys.exit()
+    # trier par ordre alpha
+    files.sort()
+    
+    # on boucle ensuite sur chaque fichier :
+    for file in files:
+        print(file)
+        print("*********************************\n")
+
+        wb_candidat = openpyxl.load_workbook(current_folder + file, read_only=True, data_only=True)
+        sheet = wb_candidat[TEMPLATE_SHEET]
+        valeur = sheet[TEMPLATE_DICT['session']]  # etc.
+        wb_candidat.close()
+
+    wb_etab = openpyxl.load_workbook(destination, read_only=False, data_only=True)
+        sheet = wb_etab[TEMPLATE_SHEET]
+        valeur = sheet[TEMPLATE_DICT['session']]  # etc.
+        wb_etab.close()
+
+
+
+
+info("yyy")
+touche()
+
+
+
+
 '''
-boucler sur chacun des dossiers diplome trouvés,
-lister les fichiers XL, boulcer sur chacun :
-lire les infos, reporter dans le classeur de synthèse pour le diplome
+TEMPLATE_DICT   = {'session': 'A3',
+                   'etab': 'A4',
+                   'UAI': 'A5',
+
+                   'nom': 'A7',
+                   'prenom': 'A8',
+                   'daten': 'A9',
+                   'numcandidat': 'A10',
+                   'division': 'A11',
+                   'code': 'A12'}  # !!PB!! à modifier !
+                   
+folders     = [f for f in folders if os.path.isdir(f)]  # exclure les fichiers
+# filtrer les répertoires dont le nom commence par INDIV_FOLDER
+folders     = [f for f in folders if f[0:len(INDIV_FOLDER)] == INDIV_FOLDER]
+# filtrer les répertoires dont le nom continue par 8 caractères (UAI)
+folders     = [f for f in folders if len(f[len(INDIV_FOLDER):]) == 8]
+# filtrer les répertoires dont le nom continue par 7 chiffres
+folders     = [f for f in folders if f[len(INDIV_FOLDER):len(INDIV_FOLDER) + 7].isdigit()]
+# filtrer les répertoires dont le nom continue par 1 lettre
+folders     = [f for f in folders if f[len(INDIV_FOLDER) + 7:].isalpha()]
+
 '''
+
+info("STOP")
+touche()
+
+
 
 
 

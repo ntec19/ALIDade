@@ -8,13 +8,16 @@
 ################################################################
 # CONSTANTES :
 
-# diplômes possibles :1
+# diplômes possibles :
 DIPLOMES        = {'31212': "Métiers de l'accueil",
                    '31213': "Met.com.ven.op.A Ani.ges.esp.com.",
-                   '31214': "Met.com.ven.Op.B Pr.cl.va.of.com."}  # !!todo!! : manque 1 diplôme (CAP)
+                   '31214': "Met.com.ven.Op.B Pr.cl.va.of.com.",
+                   '31224': "CAP Équipier polyvalent du commerce"}  # !!todo!! : vérifier code CAP EPC
+
 DIPLOMES_COURTS = {'31212': "bacpro_MA",
                    '31213': "bacpro_MVC_A_AGEC",
-                   '31214': "bacpro_MVC_B_PC"}                    # !!todo!! : manque 1 diplôme (CAP)
+                   '31214': "bacpro_MVC_B_PC",
+                   '31224': "CAP_EPC"}                              # !!todo!! : vérifier code CAP EPC
 
 # préfixe répertoire
 INDIV_FOLDER    = 'candidats_'
@@ -23,7 +26,6 @@ INDIV_FOLDER    = 'candidats_'
 CYCLADE_PREFIX = "cyclade"  # les fichiers CSV exportés de Cyclade doivent être commencés par ...
 
 # fichiers "modèles" :
-TEMPLATE_FILES  = ['31212.xlsx', '31213.xlsx', '31214.xlsx']
 TEMPLATE_SHEET  = '1-Candidat, établissement'
 TEMPLATE_DICT   = {'session': 'A3',
                    'etab': 'A4',
@@ -310,9 +312,9 @@ for candidat in candidats:
     folder      =  "./" + INDIV_FOLDER + etab_uai + "/"
     folder      += candidat[5] + "-"
     folder      += DIPLOMES_COURTS[candidat[5]] + "/"
-    filename    =  sanitize(candidat[0]) + "+"
-    filename    += sanitize(candidat[1]) + "+"
-    filename    += candidat[5] + "+"
+    filename    =  sanitize(candidat[0]) + CHAR_SEP
+    filename    += sanitize(candidat[1]) + CHAR_SEP
+    filename    += candidat[5] + CHAR_SEP
     filename    += candidat[3] + ".xlsx"
     print("\n" + "-" * 32)
     print(f"Candidat traité : {candidat[0]} {candidat[1]}, né(e) le {candidat[2]}")
@@ -352,9 +354,7 @@ for candidat in candidats:
     wb.save(destination)
     wb.close()
 
-msg_fin = f"""
-
-🟢 Les fichiers des candidats sont créés :
+msg_fin = f"""🟢 Les fichiers des candidats sont créés !
 
 Dans le dossier "{INDIV_FOLDER}{etab_uai}", un sous-dossier est
 préparé par diplôme.
