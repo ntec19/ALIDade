@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #
 # script genere_grilles_indiv.py
-# v2023-01-22 🟢⚠❌📌‼❓🔷👉⌨️
+# v2023-01-30 🟢⚠❌📌‼❓🔷👉⌨️
 # doc openpyxl : https://openpyxl.readthedocs.io
 
 
@@ -22,19 +22,13 @@ INDIV_FOLDER    = 'candidats_'
 # fichiers "source de données" : CYCLADE
 CYCLADE_PREFIX = "cyclade"  # les fichiers CSV exportés de Cyclade doivent être commencés par ...
 
-# old :
-LIST_FILE       = 'DOSSIER ETABLISSEMENT CAP EPC.xlsx'
-LIST_SHEET      = 'RECAPNOTES'
-LIST_RANGE      = (12, 1, 46, 3)  # ie : début = L12, C1 ; fin = L46, C3
-
-
 # fichiers "modèles" :
 TEMPLATE_FILES  = ['31212.xlsx', '31213.xlsx', '31214.xlsx']
 TEMPLATE_SHEET  = '1-Candidat, établissement'
 TEMPLATE_DICT   = {'session': 'A3',
                    'etab': 'A4',
                    'UAI': 'A5',
-                   
+
                    'nom': 'A7',
                    'prenom': 'A8',
                    'daten': 'A9',
@@ -379,11 +373,6 @@ info(msg_fin)
 
 
 
-
-
-
-
-
 '''
 
 *************************************
@@ -413,12 +402,15 @@ Pourquoi ? Lié au pb ci-dessus ?
 '''
 
 
-
-
 '''
 *************************************
     old code :
 *************************************
+
+# old :
+LIST_FILE       = 'DOSSIER ETABLISSEMENT CAP EPC.xlsx'
+LIST_SHEET      = 'RECAPNOTES'
+LIST_RANGE      = (12, 1, 46, 3)  # ie : début = L12, C1 ; fin = L46, C3
 
 # vérification : la feuille TEMPLATE_SHEET existe dans le fichier TEMPLATE_FILE
 wb = openpyxl.load_workbook(TEMPLATE_FILE, read_only=True, data_only=True)
@@ -462,5 +454,5 @@ for eleve in data:
     print("\tNom du fichier :", filename)
     shutil.copyfile(TEMPLATE_FILE, INDIV_FOLDER+'/'+filename)
     time.sleep(TEMPO)
-    
+
 '''
