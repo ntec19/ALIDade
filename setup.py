@@ -8,14 +8,17 @@
 ################################################################
 # CONSTANTES :
 
-# préfixe répertoire établissement
-ETAB_FOLDER         = 'candidats_'
+# préfixe répertoire des dossiers des candidats
+CANDIDATS_FOLDER_PREFIX     = 'candidats_'
+
+# préfixe répertoire des dossiers de synthèse établissement
+ETAB_FOLDER_PREFIX          = 'synthese_'
 
 # préfixe répertoire des fichiers modèles
-TEMPLATES_FOLDER        = 'MODELES'
+TEMPLATES_FOLDER            = 'MODELES'
 
 # fichiers "source de données" : CYCLADE
-CYCLADE_PREFIX      = "cyclade"  # les fichiers CSV exportés de Cyclade doivent être commencés par ...
+CYCLADE_PREFIX              = "cyclade"  # les fichiers CSV exportés de Cyclade doivent être commencés par ...
 
 # diplômes possibles :
 DIPLOMES                    = { '31212': "Métiers de l'accueil",
@@ -29,8 +32,8 @@ DIPLOMES_COURTS             = { '31212': "bacpro_MA",
                                 '31224': "CAP_EPC"}                              # !!todo!! : vérifier code CAP EPC
 
 # fichiers "modèles" candidats :
-TEMPLATE_CANDIDAT_SHEET     = '1-Candidat, établissement'
-TEMPLATE_CANDIDAT_DICT      = { 'session': 'A3',
+CANDIDATS_TEMPLATE_SHEET    = '1-Candidat, établissement'
+CANDIDATS_TEMPLATE_DICT     = { 'session': 'A3',
                                 'etab': 'A4',
                                 'UAI': 'A5',
 
@@ -42,8 +45,8 @@ TEMPLATE_CANDIDAT_DICT      = { 'session': 'A3',
                                 'code': 'A12'}  # !!PB!! à modifier !
 
 # fichiers "modèles" établissement :
-TEMPLATE_ETAB_SHEET         = '1-Candidat, établissement'
-TEMPLATE_ETAB_DICT          = { 'session': 'A3',
+ETAB_TEMPLATE_SHEET         = '1-Candidat, établissement'
+ETAB_TEMPLATE_DICT          = { 'session': 'A3',
                                 'etab': 'A4',
                                 'UAI': 'A5',
 
