@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #
 # script consolide_grilles.py
-# v2023-02-07-01
+# v2023-02-07f
 # 🟢⚠❌📌‼❓🔷👉⌨️
 # doc openpyxl : https://openpyxl.readthedocs.io
 
@@ -30,7 +30,6 @@ les prérequis suivants :
 - Dans le répertoire "{TEMPLATES_FOLDER}", se trouvent les
   👉 fichiers modèles "établissement" nécessaires :
 {NEWLINE.join(f'        "{key}_etab.xlsx" -> {value}' for key, value in DIPLOMES.items())}
-  avec une feuille "{ETAB_TEMPLATE_SHEET}".
 
 Appuyez sur [Entrée] pour continuer, [CTRL+C] pour arrêter.
 
@@ -178,318 +177,55 @@ for diplome in etab_diplomes:
 #         lire les infos (nom, prenom, ncand, note1, etc.
 
 for diplome in etab_diplomes:
-
-    print("\nOn liste le dossier", candidats_folders[diplome], " :")
-
+    
+    data_candidats = []  # contiendra des dictionnaires qui stockeront les données de chaque candidat du diplôme
+    print("\nTraitement du dossier '" + candidats_folders[diplome] + "'...\n")
+    time.sleep(TEMPO*10)
     files = os.listdir(candidats_folders[diplome])
     files.sort()
     for file in files:
-        print("\tOn traite le fichier :", file) 
-    print("\n\tOn écrit dans le fichier :", etab_syntheses[diplome])
-
-
-
-
-
-info("!!!!    STOP    !!!!")
-touche()
-
-
-# on boucle sur chaque dossier :
-for folder in candidats_subfolders:
-    # récupérer le code diplôme
-    code_diplome = folder[:5]
-    # copie du fichier modèle
-    source = "./" + TEMPLATES_FOLDER + "/" + code_diplome + "_etab.xlsx"
-    destination = code_diplome + "_" + etab_uai + "_" + DIPLOMES_COURTS[code_diplome] + ".xlsx"
-    shutil.copyfile(source, destination)
-    # récupérer le chemin relatif du dossier
-    current_folder = "./" + candidats_rootfolder + "/" + folder + "/"
-    # récupérer la liste de tous ses fichiers
-    files = os.listdir(current_folder)
-    files = [f for f in files if os.path.isfile(current_folder + "/" + f)]  # exclure les répertoires
-    if len(files) == 0:
-        print(f"❌ Un problème est survenu : dossier {current_folder} vide !\n")
-        sys.exit()
-    # trier par ordre alpha
-    files.sort()
-    
-    # on boucle ensuite sur chaque fichier :
-    for file in files:
-        print(file)
-        print("*********************************\n")
-
-        wb_candidat = openpyxl.load_workbook(current_folder + file, read_only=True, data_only=True)
-        sheet = wb_candidat[CANDIDATS_TEMPLATE_SHEET]
-        valeur = sheet[CANDIDATS_TEMPLATE_DICT['session']]  # etc.
+        candidat = {}  # contiendra les données du candidat
+        # print("\tOn traite le fichier :", file)
+        # on ouvre le fichier 'file' avec openpyxl
+        wb_candidat = openpyxl.load_workbook(candidats_folders[diplome]+'/'+file, read_only=True, data_only=True)
+        for k in CORRESPONDANCE_CANDIDATS_SYNTHESE[diplome].keys():
+            # CORRESPONDANCE_CANDIDATS_SYNTHESE[diplome][k] -> [['1-Candidat, établissement', 'A7'], ['RECAPNOTES', 12, 2]]
+            v = wb_candidat[CORRESPONDANCE_CANDIDATS_SYNTHESE[diplome][k][0][0]][CORRESPONDANCE_CANDIDATS_SYNTHESE[diplome][k][0][1]].value
+            candidat[k] = v
         wb_candidat.close()
-
-        wb_etab = openpyxl.load_workbook(destination, read_only=False, data_only=True)
-        sheet = wb_etab[CANDIDATS_TEMPLATE_SHEET]
-        valeur = sheet[CANDIDATS_TEMPLATE_DICT['session']]  # etc.
-        wb_etab.close()
-
-
-info("!!!!    STOP    !!!!")
-touche()
-
-
-
-'''
-CANDIDATS_TEMPLATE_DICT   = {'session': 'A3',
-                   'etab': 'A4',
-                   'UAI': 'A5',
-
-                   'nom': 'A7',
-                   'prenom': 'A8',
-                   'daten': 'A9',
-                   'numcandidat': 'A10',
-                   'division': 'A11',
-                   'code': 'A12'}  # !!PB!! à modifier !
-                   
-folders     = [f for f in folders if os.path.isdir(f)]  # exclure les fichiers
-# filtrer les répertoires dont le nom commence par CANDIDATS_FOLDER_PREFIX
-folders     = [f for f in folders if f[0:len(CANDIDATS_FOLDER_PREFIX)] == CANDIDATS_FOLDER_PREFIX]
-# filtrer les répertoires dont le nom continue par 8 caractères (UAI)
-folders     = [f for f in folders if len(f[len(CANDIDATS_FOLDER_PREFIX):]) == 8]
-# filtrer les répertoires dont le nom continue par 7 chiffres
-folders     = [f for f in folders if f[len(CANDIDATS_FOLDER_PREFIX):len(CANDIDATS_FOLDER_PREFIX) + 7].isdigit()]
-# filtrer les répertoires dont le nom continue par 1 lettre
-folders     = [f for f in folders if f[len(CANDIDATS_FOLDER_PREFIX) + 7:].isalpha()]
-
-'''
-
-info("STOP")
-touche()
+        data_candidats.append(candidat)
+    #info("Informations de debug : " + str(data_candidats))
+    
+    # écriture dans le fichier de synthèse établissement
+    wb_synthese = openpyxl.load_workbook(etab_syntheses[diplome], read_only=False, data_only=True)
+    for k in CORRESPONDANCE_CANDIDATS_SYNTHESE[diplome].keys():
+        # k prend ses valeurs dans : 'nom', 'prenom', 'date_n', etc.
+        first_line  = CORRESPONDANCE_CANDIDATS_SYNTHESE[diplome][k][1][1]
+        colonne     = CORRESPONDANCE_CANDIDATS_SYNTHESE[diplome][k][1][2]
+        
+        line = first_line
+        for candidat in data_candidats:
+            v = candidat[k]
+            wb_synthese[CORRESPONDANCE_CANDIDATS_SYNTHESE[diplome][k][1][0]].cell(row=line, column=colonne).value = v
+            line += 1
+    
+    wb_synthese.save(etab_syntheses[diplome])
+    wb_synthese.close()
 
 
+msg_fin = f"""🟢 🟢 🟢 🟢 🟢 🟢 🟢 🟢
 
+🟢 Les fichiers de synthèse de l'établissement sont créés :
 
-
-################################################################
-# construire une liste de tous les fichiers dont le nom commence par CYCLADE_PREFIX et d'extension .csv
-files_cyclade = []
-for f in files:
-    if f[0:7].lower() == CYCLADE_PREFIX.lower() and f.split('.')[-1].lower() == 'csv':
-        files_cyclade.append(f)
-
-
-################################################################
-# si aucun fichier cycladeXYZ.csv : sortie en erreur
-if len(files_cyclade) == 0:
-    print(f"❌ Fichier(s) Cyclade ({CYCLADE_PREFIX}XYZ.csv) inexistant(s)\n")
-    sys.exit(3)
-
-
-################################################################
-# construire une liste "candidats" à partir de tous les fichiers Cyclade
-candidats = []
-for data in files_cyclade:
-    with open(data, encoding='utf-8-sig') as f:
-        reader = list(csv.reader(f, delimiter=';', quotechar="'"))
-        # liste de liste ; reader[r] : chaque ligne ; reader[r][c] : chaque cellule
-        session     = reader[0][0]
-        etab        = reader[2][0]
-        etab_nom    = etab.split('(')[0][:-1]
-        etab_uai    = etab.split('(')[1][:-1]
-        ''' les données sont structurées ainsi :
-        ['Division de classe', 'N° Candidat', 'N° Inscription', 'N° Océan', 'Nom de famille',
-        "Nom d'usage", 'Prénom(s)', 'Date de Naissance', 'Division de classe', 'INE',
-        'Catégorie Candidat', 'Code Spécialité', 'Spécialité',
-        'Etat', 'Enseignements']
-        exemple :
-        ['TMA', '01216557741', '002 Version 2', ' -', 'DURAND',
-        ' -', 'Bryan', '09/03/2005', 'TMA', '081277848GG',
-        'SCOLAIRE BACPRO 3 ANS (132)', '31212', 'Métiers de l'accueil',
-        'Inscrit', 'Non renseigné'] '''
-        reader = reader[9:]     # les données commencent à la ligne 10
-        for line in reader:
-            # candidat : liste au format
-            # ['Nom', 'Prénom', 'Date de Naissance', 'N° Candidat', 'Division', 'Code']
-            candidat = [line[4], line[6], line[7], line[1], line[0], line[11]]
-            candidats.append(candidat)
-
-
-################################################################
-# la liste 'candidats' ne doit pas être vide
-if len(candidats) == 0:
-    print(f"❌ Un problème est survenu (pas de candidat trouvé) !\n")
-    sys.exit(4)
-
-
-################################################################
-# afficher les infos 'établissement' et 'candidats'
-info_etab   =   "Infos établissement trouvées :\n"
-info_etab   +=  "session            : " + session + "\n"
-info_etab   +=  "Nom établissement  : " + etab_nom + "\n"
-info_etab   +=  "UAI établissement  : " + etab_uai
-info(f"{len(candidats)} candidats trouvés.")
-info(info_etab)
-
-
-touche()
-
-
-################################################################
-# on dispose désormais d'une liste "candidats" ;
-# [ [ 'Nom', 'Prénom', 'Date de Naissance', 'N° Candidat', 'Division', 'Code' ], etc. ]
-# chaque élément est lui-même une liste, ie. un candidat
-#
-# ainsi que des variables "globales" : session ; etab_nom ; etab_uai
-
-
-################################################################
-# extraction des diplômes qui concernent l'établissement
-diplomes = []
-for candidat in candidats:
-    diplome = candidat[5]
-    if not (diplome in diplomes):
-        diplomes.append(diplome)
-
-
-################################################################
-# la liste 'diplomes' ne doit pas être vide
-if len(diplomes) == 0:
-    print(f"❌ Un problème est survenu (pas de diplôme trouvé) !\n")
-    sys.exit(5)
-
-
-################################################################
-# tous les éléments de la liste 'diplomes' doivent être dans les clés du dictionnaire 'DIPLOMES' (cf. constantes)
-for diplome in diplomes:
-    if not (diplome in DIPLOMES.keys()):
-        print(f"Un diplôme inconnu est trouvé : {diplome}.")
-        sys.exit(6)
-
-
-################################################################
-# affichage des diplômes trouvés (code + intitulé)
-info_diplomes = str(len(diplomes)) + " diplôme(s) trouvé(s) :\n"
-for d in diplomes:
-    info_diplomes += d + ' : '
-    info_diplomes += DIPLOMES[d] + '\n'
-info(info_diplomes[:-1])
-
-
-touche()
-
-
-################################################################
-# vérification de l'existence des fichiers modèles pour chaque diplôme
-for d in diplomes:
-    if d + '.xlsx' not in files:
-        print(f"❌ Un fichier modèle est manquant : {d + '.xlsx'} !\n")
-        sys.exit(7)
-
-
-################################################################
-# vérification de l'existence d'une feuille CANDIDATS_TEMPLATE_SHEET dans chaque fichier modèle
-for d in diplomes:
-    classeur = d + ".xlsx"
-    wb = openpyxl.load_workbook(classeur, read_only=True, data_only=True)
-    if CANDIDATS_TEMPLATE_SHEET not in wb.sheetnames:
-        print(f"❌ Le fichier \"{classeur}\" doit posséder une feuille \"{CANDIDATS_TEMPLATE_SHEET}\" !\n")
-        sys.exit(8)
-    wb.close()
-
-
-################################################################
-# création de l'arborescence pour les fichiers individuels des candidats
-#
-# si le dossier existe, le renommer
-if os.path.exists(candidats_rootfolder_PREFIX + etab_uai):
-    t = stamp()
-    print(f"⚠️ Le répertoire \"{candidats_rootfolder_PREFIX + etab_uai}\" existe déjà :\nil a été renommé en \"{candidats_rootfolder_PREFIX}_old_" + t + "\".\n")
-    os.rename(candidats_rootfolder_PREFIX + etab_uai, candidats_rootfolder_PREFIX + "_old_" + t)
-# créer le dossier candidats_UAI
-print(f"🟢 Création du répertoire \"{candidats_rootfolder_PREFIX + etab_uai}\".\n")
-os.mkdir(candidats_rootfolder_PREFIX + etab_uai)
-# créer un sous dossier par diplôme
-for diplome in diplomes:
-    folderName  =   candidats_rootfolder_PREFIX + etab_uai
-    folderName  +=  "/"
-    folderName  +=  diplome + "-"
-    folderName  +=  DIPLOMES_COURTS[diplome]
-    os.mkdir(folderName)
-
-
-touche()
-
-
-################################################################
-# création des fichiers individuels des candidats dans l'arborescence
-
-# pour mémoire :
-# candidats = [ [ 'Nom', 'Prénom', 'Date de Naissance', 'N° Candidat', 'Division', 'Code' ], etc. ]
-# + variables "globales" : session ; etab_nom ; etab_uai
-# arbo =    .    /    candidats_rootfolder_PREFIX + etab_uai    /    diplome + "-" DIPLOMES_COURTS[diplome]
-# arbo =    .    /    candidats_0921500F         /    31212-bacpro_MA
-# nom+prenom+code+ncandidat.xlsx
-info("Traitement : création des fichiers individuels des candidats")
-for candidat in candidats:
-    ################################################################
-    # copie du fichier 'modèle' vers le fichier 'candidat' dans le bon sous-dossier
-    folder      =  "./" + candidats_rootfolder_PREFIX + etab_uai + "/"
-    folder      += candidat[5] + "-"
-    folder      += DIPLOMES_COURTS[candidat[5]] + "/"
-    filename    =  sanitize(candidat[0]) + "+"
-    filename    += sanitize(candidat[1]) + "+"
-    filename    += candidat[5] + "+"
-    filename    += candidat[3] + ".xlsx"
-    print("\n" + "-" * 32)
-    print(f"Candidat traité : {candidat[0]} {candidat[1]}, né(e) le {candidat[2]}")
-    print(f"Diplôme : {DIPLOMES_COURTS[candidat[5]]} (code : {candidat[5]})")
-    print(f"Division : {candidat[4]} - Numéro de candidat : {candidat[3]}")
-    print(f"Nom du dossier : {folder}")
-    print(f"Nom du fichier : {filename}")
-    # exemple source :
-    #   31212.xlsx
-    # exemple destination :
-    #   ./0921234A_candidats/31212-bacpro_MA/DURAND+Clara+31212+06916557742.xlsx
-    source      = candidat[5] + ".xlsx"
-    destination = folder + filename
-    # print(f"{source} -> {destination}")
-    shutil.copyfile(source, destination)
-    time.sleep(TEMPO)  # pour 'terminer' l'écriture du fichier
-    #
-    ################################################################
-    # personnalisation des fichiers candidats (insertion des valeurs)
-    # pour mémoire :
-    # clés de CANDIDATS_TEMPLATE_DICT :
-    # 'session', 'etab', 'UAI', 'nom', 'prenom', 'daten', 'numcandidat', 'division', 'code'
-    # pour mémoire :
-    # candidats = [ [ 'Nom', 'Prénom', 'Date de Naissance', 'N° Candidat', 'Division', 'Code' ], etc. ]
-    #
-    wb = openpyxl.load_workbook(destination, read_only=False)
-    sheet = wb[CANDIDATS_TEMPLATE_SHEET]
-    sheet[CANDIDATS_TEMPLATE_DICT['session']]     = session
-    sheet[CANDIDATS_TEMPLATE_DICT['etab']]        = etab_nom
-    sheet[CANDIDATS_TEMPLATE_DICT['UAI']]         = etab_uai
-    sheet[CANDIDATS_TEMPLATE_DICT['nom']]         = candidat[0]
-    sheet[CANDIDATS_TEMPLATE_DICT['prenom']]      = candidat[1]
-    sheet[CANDIDATS_TEMPLATE_DICT['daten']]       = candidat[2]
-    sheet[CANDIDATS_TEMPLATE_DICT['numcandidat']] = candidat[3]
-    sheet[CANDIDATS_TEMPLATE_DICT['division']]    = candidat[4]
-    sheet[CANDIDATS_TEMPLATE_DICT['code']]        = candidat[5]
-    wb.save(destination)
-    wb.close()
-
-msg_fin = f"""
-
-🟢 Les fichiers des candidats sont créés :
-
-Dans le dossier "{candidats_rootfolder_PREFIX}{etab_uai}", un sous-dossier est
+Dans le dossier "{etab_folder}", un fichier Excel est
 préparé par diplôme.
-Chacun d'entre eux contient les fichiers individuels des candidats,
-avec les informations nominatives mises à jour.
+Chacun d'entre eux contient la consolidation des informations
+des candidats : état civil, numéro de candidat, notes, etc.
 
-That's all folks!
+That's all folks again!
 
 """
 
 info(msg_fin)
 
 # fin
-
-
-

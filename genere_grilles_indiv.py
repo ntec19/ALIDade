@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #
 # script genere_grilles_indiv.py
-# v2023-01-30
+# v2023-02-07f
 # 🟢⚠❌📌‼❓🔷👉⌨️
 # doc openpyxl : https://openpyxl.readthedocs.io
 
@@ -262,17 +262,17 @@ for candidat in candidats:
     sheet[CANDIDATS_TEMPLATE_DICT['daten']]       = candidat[2]
     sheet[CANDIDATS_TEMPLATE_DICT['numcandidat']] = candidat[3]
     sheet[CANDIDATS_TEMPLATE_DICT['division']]    = candidat[4]
-    sheet[CANDIDATS_TEMPLATE_DICT['code']]        = candidat[5]
+    # sheet[CANDIDATS_TEMPLATE_DICT['code']]        = candidat[5]
     wb.save(destination)
     wb.close()
     ################################################################
     # affichage rassurant ;-)
     print("\n" + "-" * 32)
     print(f"Candidat traité : {candidat[0]} {candidat[1]}, né(e) le {candidat[2]}")
-    print(f"Diplôme : {DIPLOMES_COURTS[candidat[5]]} (code : {candidat[5]})")
-    print(f"Division : {candidat[4]} - Numéro de candidat : {candidat[3]}")
-    print(f"Nom du dossier : {folder}")
-    print(f"Nom du fichier : {filename}")
+    print(f"    Diplôme : {DIPLOMES_COURTS[candidat[5]]} (code : {candidat[5]})")
+    print(f"    Division : {candidat[4]} - Numéro de candidat : {candidat[3]}")
+    print(f"    Nom du dossier : {folder}")
+    print(f"    Nom du fichier : {filename}")
 
 ################################################################
 # affichage final
@@ -292,91 +292,3 @@ That's all folks!
 info(msg_fin)
 
 # fin
-
-
-
-
-
-'''
-
-*************************************
-    REMARQUES
-*************************************
-
-👉 : avec un fichier Excel 'propre', cela n'arrive plus !
-
-WARNING en début de traitement :
-
-Élève traité : COLEMAN - Leslie - M2023094837 - CAP_EPC
-        Nom du fichier : CAP_EPC+COLEMAN+Leslie+M2023094837.xlsx
-/usr/lib/python3/dist-packages/openpyxl/worksheet/_reader.py:300: UserWarning: Data Validation extension is not supported and will be removed
-  warn(msg)
-/usr/lib/python3/dist-packages/openpyxl/worksheet/_reader.py:300: UserWarning: Unknown extension is not supported and will be removed
-  warn(msg)
-
-*************************************
-
-👉 : avec un fichier Excel 'propre', cela n'arrive plus !
-
-taille énorme des fichiers XLSX : 14 Mo !!
-Pourquoi ? Lié au pb ci-dessus ?
-
-*************************************
-
-'''
-
-
-'''
-*************************************
-    old code :
-*************************************
-
-# old :
-LIST_FILE       = 'DOSSIER ETABLISSEMENT CAP EPC.xlsx'
-LIST_SHEET      = 'RECAPNOTES'
-LIST_RANGE      = (12, 1, 46, 3)  # ie : début = L12, C1 ; fin = L46, C3
-
-# vérification : la feuille TEMPLATE_SHEET existe dans le fichier TEMPLATE_FILE
-wb = openpyxl.load_workbook(TEMPLATE_FILE, read_only=True, data_only=True)
-if TEMPLATE_SHEET not in wb.sheetnames:
-    print(f"❌ Le fichier \"{TEMPLATE_FILE}\" doit posséder une feuille \"{TEMPLATE_SHEET}\" !\n")
-    sys.exit()
-wb.close()
-
-# vérification : la feuille LIST_SHEET existe dans le fichier LIST_FILE
-wb = openpyxl.load_workbook(LIST_FILE, read_only=True, data_only=True)
-if LIST_SHEET not in wb.sheetnames:
-    print(f"❌ Le fichier \"{LIST_FILE}\" doit posséder une feuille \"{LIST_SHEET}\" !\n")
-    sys.exit()
-
-# récupération des données dans une liste "data"
-sheet = wb[LIST_SHEET]
-data = []
-for l in range(LIST_RANGE[0], LIST_RANGE[2]+1):
-    eleve = []
-    not_empty = True  # la ligne n'est pas vide (ie : pas de valeur dans la première colonne)
-    for c in range(LIST_RANGE[1], LIST_RANGE[3]+1):
-        cell = sheet.cell(row=l, column=c).value
-        if cell is None:
-            not_empty = False
-        else:
-            eleve.append(cell)
-    if not_empty:
-        data.append(eleve)
-examen = sanitize(sheet.cell(row=1, column=1).value)
-wb.close()
-# print(data, examen)
-
-for eleve in data:
-    [matricule, nom, prenom] = eleve
-    print(f"\n\nÉlève traité : {nom} - {prenom} - {matricule} - {examen}")
-    # copie du fichier TEMPLATE_FILE dans le répertoire CANDIDATS_FOLDER_PREFIX, nommé examen+nom+prenom.ncandidat.xlsx
-    filename  = sanitize(examen) + CHAR_SEP
-    filename += sanitize(nom) + CHAR_SEP
-    filename += sanitize(prenom) + CHAR_SEP
-    filename += matricule + ".xlsx"
-    print("\tNom du fichier :", filename)
-    shutil.copyfile(TEMPLATE_FILE, CANDIDATS_FOLDER_PREFIX+'/'+filename)
-    time.sleep(TEMPO)
-
-'''

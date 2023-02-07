@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #
 # module setup.py
-# v2023-02-05
+# v2023-02-07f
 # 🟢⚠❌📌‼❓🔷👉⌨️
 
 
@@ -41,21 +41,66 @@ CANDIDATS_TEMPLATE_DICT     = { 'session': 'A3',
                                 'prenom': 'A8',
                                 'daten': 'A9',
                                 'numcandidat': 'A10',
-                                'division': 'A11',
-                                'code': 'A12'}  # !!PB!! à modifier !
+                                'division': 'A11'}  # !!PB!! à modifier !
 
-# fichiers "modèles" établissement :
-ETAB_TEMPLATE_SHEET         = '1-Candidat, établissement'
-ETAB_TEMPLATE_DICT          = { 'session': 'A3',
-                                'etab': 'A4',
-                                'UAI': 'A5',
+# dictionnaire de correspondance entre
+#      ->   fichiers individuels des candidats
+#  et  ->   fichiers de synthese établissement
 
-                                'nom': 'A7',
-                                'prenom': 'A8',
-                                'daten': 'A9',
-                                'numcandidat': 'A10',
-                                'division': 'A11',
-                                'code': 'A12'}  # !!PB!! à modifier !
+CORRESPONDANCE_CANDIDATS_SYNTHESE = {
+    # source :          fichier individuel du candidat
+    # destination :     fichier de synthese établissement
+    
+    '31212': {
+       #'champ' : [ [feuille_source, cellule_source], [feuille_destination, première_ligne_des_données, colonne ] ]
+        'nom':      [ ['1-Candidat, établissement', 'A7'], ['RECAPNOTES', 12, 2] ],
+        'prenom':   [ ['1-Candidat, établissement', 'A8'],  ['RECAPNOTES', 12, 3] ],
+       #'date_n':   [ ['1-Candidat, établissement', 'A9'],  ['RECAPNOTES', 12, 2] ],
+        'n_cand':   [ ['1-Candidat, établissement', 'A10'], ['RECAPNOTES', 12, 1] ],
+       #'division': [ ['1-Candidat, établissement', 'A11'], ['RECAPNOTES', 12, 2] ],
+        
+        'notEPx':   [ ['2. EPx', 'B1'], ['RECAPNOTES', 12, 4] ],
+        'notEPy':   [ ['3. EPy', 'B1'], ['RECAPNOTES', 12, 5] ]
+    },
+    
+    '31213': {
+       #'champ' : [ [feuille_source, cellule_source], [feuille_destination, première_ligne_des_données, colonne ] ]
+        'nom':      [ ['1-Candidat, établissement', 'A7'], ['RECAPNOTES', 12, 2] ],
+        'prenom':   [ ['1-Candidat, établissement', 'A8'],  ['RECAPNOTES', 12, 3] ],
+       #'date_n':   [ ['1-Candidat, établissement', 'A9'],  ['RECAPNOTES', 12, 2] ],
+        'n_cand':   [ ['1-Candidat, établissement', 'A10'], ['RECAPNOTES', 12, 1] ],
+       #'division': [ ['1-Candidat, établissement', 'A11'], ['RECAPNOTES', 12, 2] ],
+        
+        'notEPx':   [ ['2. EPx', 'B1'], ['RECAPNOTES', 12, 4] ],
+        'notEPy':   [ ['3. EPy', 'B1'], ['RECAPNOTES', 12, 5] ]
+    },
+    
+    '31214': {
+       #'champ' : [ [feuille_source, cellule_source], [feuille_destination, première_ligne_des_données, colonne ] ]
+        'nom':      [ ['1-Candidat, établissement', 'A7'], ['RECAPNOTES', 12, 2] ],
+        'prenom':   [ ['1-Candidat, établissement', 'A8'],  ['RECAPNOTES', 12, 3] ],
+       #'date_n':   [ ['1-Candidat, établissement', 'A9'],  ['RECAPNOTES', 12, 2] ],
+        'n_cand':   [ ['1-Candidat, établissement', 'A10'], ['RECAPNOTES', 12, 1] ],
+       #'division': [ ['1-Candidat, établissement', 'A11'], ['RECAPNOTES', 12, 2] ],
+        
+        'notEPx':   [ ['2. EPx', 'B1'], ['RECAPNOTES', 12, 4] ],
+        'notEPy':   [ ['3. EPy', 'B1'], ['RECAPNOTES', 12, 5] ]
+    },
+    
+    '31224': {
+       #'champ' : [ [feuille_source, cellule_source], [feuille_destination, première_ligne_des_données, colonne ] ]
+        'nom':      [ ['1-Candidat, établissement', 'A7'], ['RECAPNOTES', 12, 2] ],
+        'prenom':   [ ['1-Candidat, établissement', 'A8'],  ['RECAPNOTES', 12, 3] ],
+       #'date_n':   [ ['1-Candidat, établissement', 'A9'],  ['RECAPNOTES', 12, 2] ],
+        'n_cand':   [ ['1-Candidat, établissement', 'A10'], ['RECAPNOTES', 12, 1] ],
+       #'division': [ ['1-Candidat, établissement', 'A11'], ['RECAPNOTES', 12, 2] ],
+        
+        'notEPx':   [ ['2. EPx', 'B1'], ['RECAPNOTES', 12, 4] ],
+        'notEPy':   [ ['3. EPy', 'B1'], ['RECAPNOTES', 12, 5] ]
+    }
+
+}
+
 
 TEMPO           = 0.1
 NSEP            = 32  # pour l'affichage des séparateurs

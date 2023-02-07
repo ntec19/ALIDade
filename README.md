@@ -1,6 +1,6 @@
 # Projet 'ALIDade'
 
-_Automatisation pour les Livrets Individuels Dématérialisés_
+_Automatisation pour les Livrets Individuels Dématérialisés, v2023-02-07f_
 
 ![image alidade](https://marine-data.co.uk/wp-content/uploads/2016/03/MD69BC-800x600.1-300x225.png)
 
@@ -12,7 +12,7 @@ L'objectif de ces scripts Python est d'automatiser autant que possible le traite
 - [31212] baccalaureat professionnel "Métiers de l'accueil"
 - [31213] baccalaureat professionnel "Métiers du commerce et de la vente - Option A : Animation et gestion de l'espace commercial"
 - [31214] baccalaureat professionnel "Métiers du commerce et de la vente - Option B : Prospection clientèle et valorisation de l'offre commerciale"
-- [????] CAP "Équipier polyvalent du commerce"
+- [31224] CAP "Équipier polyvalent du commerce"
 
 ----
 
@@ -28,8 +28,11 @@ Pour que ce script fonctionne correctement, il est nécessaire de vérifier les 
       un pour le bac pro) ; les candidats seront recherchés  
       dans chacun d'entre eux ;
     - 👉 les fichiers modèles nécessaires :  
-      31212.xlsx, 31213.xlsx, 31214.xlsx, ?????.xlsx  
-      avec une feuille '1-Candidat, établissement'.
+         - fichiers modèles candidats : 31212.xlsx, 31213.xlsx, 31214.xlsx, 31224.xlsx
+         - fichiers modèles synthèse établissement : 31212_etab.xlsx, 31213_etab.xlsx, 31214_etab.xlsx, 31224_etab.xlsx
+
+Le fichier 'setup.py' est particulièrement important, car il contient les CONSTANTES qu'il conviendra de modifier pour changer les valeurs par défaut du programme.
+⚠ En particulier, le dictionnaire CORRESPONDANCE_CANDIDATS_SYNTHESE assure la correspondance des références de cellules entre les fichiers individuels de candidat et les fichiers de synthese établissement : il devra être défini avec attention. ⚠
 
 ----
 
