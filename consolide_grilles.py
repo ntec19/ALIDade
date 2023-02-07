@@ -182,22 +182,18 @@ for diplome in etab_diplomes:
     print("\nOn liste le dossier", candidats_folders[diplome], " :")
 
     files = os.listdir(candidats_folders[diplome])
+    files.sort()
     for file in files:
         print("\tOn traite le fichier :", file) 
     print("\n\tOn écrit dans le fichier :", etab_syntheses[diplome])
 
+
+
+
+
 info("!!!!    STOP    !!!!")
 touche()
 
-
-#     pour chaque fichier dans le dossier diplome
-#         traitement :
-
-
-################################################################
-# pour chaque dossier diplome trouvé,
-#     pour chaque fichier dans le dossier diplome
-#         traitement :
 
 # on boucle sur chaque dossier :
 for folder in candidats_subfolders:
