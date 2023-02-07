@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #
 # script consolide_grilles.py
-# v2023-01-30
+# v2023-02-07-01
 # 🟢⚠❌📌‼❓🔷👉⌨️
 # doc openpyxl : https://openpyxl.readthedocs.io
 
@@ -36,6 +36,7 @@ Appuyez sur [Entrée] pour continuer, [CTRL+C] pour arrêter.
 
 """
 
+
 ################################################################
 # affichage de la documentation
 print(DOC)
@@ -50,12 +51,14 @@ info("Début du traitement...")
 
 
 ################################################################
-# déterminer le répertoire 'établissement'
-# ie. : candidats_0921234A
+# déterminer le répertoire candidats de l'établissement : 'candidats_rootfolder'
+# ex: 'candidats_0921234A'
+# et l'UAI 'etab_uai', ex: '0921234A'
+#
 # récupérer une liste de tous les répertoires du répertoire courant
 folders     = os.listdir(".")
 folders     = [f for f in folders if os.path.isdir(f)]  # exclure les fichiers
-# filtrer les répertoires dont le nom commence par CANDIDATS_FOLDER_PREFIX
+# filtrer les répertoires dont le nom commence par candidats_rootfolder_PREFIX
 folders     = [f for f in folders if f[0:len(CANDIDATS_FOLDER_PREFIX)] == CANDIDATS_FOLDER_PREFIX]
 # filtrer les répertoires dont le nom continue par 8 caractères (UAI)
 folders     = [f for f in folders if len(f[len(CANDIDATS_FOLDER_PREFIX):]) == 8]
@@ -70,63 +73,125 @@ if len(folders) != 1:
     print(f"❌ Un problème est survenu (ambiguïté sur les dossiers candidats) !\n")
     print(folders)
     sys.exit()
-candidats_folder = folders[0] 
-etab_uai = candidats_folder[len(CANDIDATS_FOLDER_PREFIX):]
-info(f"UAI : {etab_uai} - Dossier candidats trouvé : {candidats_folder}")
+candidats_rootfolder = folders[0] 
+etab_uai = candidats_rootfolder[len(CANDIDATS_FOLDER_PREFIX):]
+info(f"UAI : {etab_uai} - Dossier candidats trouvé : {candidats_rootfolder}")
 
 
 ################################################################
-# déterminer les sous-répertoires 'diplômes' du répertoire 'établissement'
-
-# récupérer une liste de tous les fichiers du répertoire 'établissement'
-folders_diplomes    = os.listdir("./" + candidats_folder)
-folders_diplomes     = [f for f in folders_diplomes if os.path.isdir("./" + candidats_folder + "/" + f)]  # exclure les fichiers
+# récupérer une liste 'candidats_subfolders' de tous les fichiers du répertoire 'établissement'
+# ex: [ '31212-bacpro_MA', etc. ]
+candidats_subfolders    = os.listdir("./" + candidats_rootfolder)
+candidats_subfolders     = [f for f in candidats_subfolders if os.path.isdir("./" + candidats_rootfolder + "/" + f)]  # exclure les fichiers
 # vérifier que les noms des dossiers diplômes commencent bien par un code connu (32212, etc.)
-for folder in folders_diplomes:
+for folder in candidats_subfolders:
     if folder[0:5] not in DIPLOMES.keys():
         print(f"❌ Un problème est survenu avec ce dossier diplôme non conforme : {folder} !\n")
         sys.exit()
 # trier par ordre alpha
-folders_diplomes.sort()
+candidats_subfolders.sort()
 
+
+################################################################
+# construire la liste 'etab_diplomes', sous-ensemble des clés de 'DIPLOMES'
+# qui ne contient que les *codes* de diplômes *réellement trouvés*
+# dans le dossier 'candidats_rootfolder'
+# ex: [ '31212', '31213', etc ]
+etab_diplomes = []
+for folder in candidats_subfolders:
+    etab_diplomes.append(folder[0:5])
+
+
+################################################################
+# construction d'un dictionnaire 'candidats_folders'
+# ex: { '31212': './candidats_0921234A/31212-bacpro_MA' }
+candidats_folders = {}
+for diplome in etab_diplomes:
+    candidats_folders[diplome] = './' + candidats_rootfolder + '/' + diplome + "-" + DIPLOMES_COURTS[diplome]
+
+
+################################################################
+# vérification de la cohérence
+# entre les noms de dossiers candidats réels
+# et les noms attendus
+candidats_subfolders_attendus = [v.split('/')[2] for v in candidats_folders.values()]
+if candidats_subfolders_attendus != candidats_subfolders:
+    print(f"❌ Un problème est survenu avec le nommage des sous-dossiers des candidats :")
+    print(set(candidats_subfolders_attendus).symmetric_difference(set(candidats_subfolders)))
+    sys.exit()
+
+
+################################################################
 # affichage intermédiaire : nombre de dossiers et noms de ces dossiers
 message     =  "Nombre de dossiers 'diplômes' trouvés : "
-message     += str(len(folders_diplomes)) + " :\n\t"
-message     += "\n\t".join(folders_diplomes)
+message     += str(len(candidats_subfolders)) + " :\n\t"
+message     += "\n\t".join(candidats_subfolders)
 info(message)
 touche()
 
 
 ################################################################
 # vérifier l'existence des fichiers modèle ETABLISSEMENT nécessaires
-
 # récupérer une liste de tous les fichiers du répertoire TEMPLATES_FOLDER
 files = os.listdir("./"+TEMPLATES_FOLDER)
 files = [f for f in files if os.path.isfile("./"+TEMPLATES_FOLDER+'/'+f)]  # exclure les répertoires
 
-for folder in folders_diplomes:
-    if folder[:5] + "_etab.xlsx" not in files:
-        print(f"❌ Un problème est survenu : fichier modèle établisement  {folder[:5]}_etab.xlsx inexistant !\n")
+for diplome in etab_diplomes:
+    if diplome + "_etab.xlsx" not in files:
+        print(f"❌ Un problème est survenu : fichier modèle établisement  {diplome}_etab.xlsx inexistant !\n")
         sys.exit()
 
 
 ################################################################
 # création du répertoire pour les fichiers de synthèse établissement
-#
+etab_folder = ETAB_FOLDER_PREFIX + etab_uai  # ex: synthese_0921234A
 # si le dossier existe, le renommer
-if os.path.exists(ETAB_FOLDER_PREFIX + etab_uai):
+if os.path.exists(etab_folder):
     t = stamp()
-    print(f"⚠️ Le répertoire \"{ETAB_FOLDER_PREFIX + etab_uai}\" existe déjà :\nil a été renommé en \"{ETAB_FOLDER_PREFIX}_old_" + t + "\".\n")
-    os.rename(ETAB_FOLDER_PREFIX + etab_uai, ETAB_FOLDER_PREFIX + "_old_" + t)
+    os.rename(etab_folder, etab_folder + "_old_" + t)
+    print(f"⚠️ Le répertoire \"{etab_folder}\" existe déjà :\nil a été renommé en \"{etab_folder}_old_" + t + "\".\n")
 # créer le dossier synthese_UAI
-print(f"🟢 Création du répertoire \"{ETAB_FOLDER_PREFIX + etab_uai}\".\n")
-os.mkdir(ETAB_FOLDER_PREFIX + etab_uai)
+os.mkdir(etab_folder)
+print(f"🟢 Création du répertoire \"{etab_folder}\".\n")
 
+
+################################################################
+# créer le fichier de synthèse de l'établissement pour tous les diplômes
+# de la liste 'etab_diplomes' (ex: ['31212', '31213', etc])
+#, dans le dossier 'etab_folder' (ex: 'synthese_0921234A')
+# par copie du fichier modèle, source = 'TEMPLATES_FOLDER'
+# et
+# construction d'un dictionnaire 'etab_syntheses' :
+# { '31212': './synthese_0921500F/31212_0921234A_bacpro_MA.xlsx', etc}
+etab_syntheses = {}
+for diplome in etab_diplomes:
+    source = './' + TEMPLATES_FOLDER + '/' + diplome + '_etab.xlsx'  # ex: ./MODELES/31212_etab.xlsx
+    destination = './' + etab_folder + '/' + diplome + "_" + etab_uai + "_" + DIPLOMES_COURTS[diplome] + ".xlsx"  # ex: ./synthese_0921500F/31212_0921234A_bacpro_MA.xlsx
+    etab_syntheses[diplome] = destination
+    shutil.copyfile(source, destination)
+
+
+################################################################
+# traitement des fichiers individuels des candidats :
+# pour chaque diplome (répertoire) :
+#     pour chaque candidat (fichier xlsx) :
+#         lire les infos (nom, prenom, ncand, note1, etc.
+
+for diplome in etab_diplomes:
+
+    print("\nOn liste le dossier", candidats_folders[diplome], " :")
+
+    files = os.listdir(candidats_folders[diplome])
+    for file in files:
+        print("\tOn traite le fichier :", file) 
+    print("\n\tOn écrit dans le fichier :", etab_syntheses[diplome])
 
 info("!!!!    STOP    !!!!")
 touche()
-# le dossier synthese_0921234A est créé : à suivre ;-)
-# to be continued
+
+
+#     pour chaque fichier dans le dossier diplome
+#         traitement :
 
 
 ################################################################
@@ -135,7 +200,7 @@ touche()
 #         traitement :
 
 # on boucle sur chaque dossier :
-for folder in folders_diplomes:
+for folder in candidats_subfolders:
     # récupérer le code diplôme
     code_diplome = folder[:5]
     # copie du fichier modèle
@@ -143,7 +208,7 @@ for folder in folders_diplomes:
     destination = code_diplome + "_" + etab_uai + "_" + DIPLOMES_COURTS[code_diplome] + ".xlsx"
     shutil.copyfile(source, destination)
     # récupérer le chemin relatif du dossier
-    current_folder = "./" + candidats_folder + "/" + folder + "/"
+    current_folder = "./" + candidats_rootfolder + "/" + folder + "/"
     # récupérer la liste de tous ses fichiers
     files = os.listdir(current_folder)
     files = [f for f in files if os.path.isfile(current_folder + "/" + f)]  # exclure les répertoires
@@ -336,16 +401,16 @@ for d in diplomes:
 # création de l'arborescence pour les fichiers individuels des candidats
 #
 # si le dossier existe, le renommer
-if os.path.exists(CANDIDATS_FOLDER_PREFIX + etab_uai):
+if os.path.exists(candidats_rootfolder_PREFIX + etab_uai):
     t = stamp()
-    print(f"⚠️ Le répertoire \"{CANDIDATS_FOLDER_PREFIX + etab_uai}\" existe déjà :\nil a été renommé en \"{CANDIDATS_FOLDER_PREFIX}_old_" + t + "\".\n")
-    os.rename(CANDIDATS_FOLDER_PREFIX + etab_uai, CANDIDATS_FOLDER_PREFIX + "_old_" + t)
+    print(f"⚠️ Le répertoire \"{candidats_rootfolder_PREFIX + etab_uai}\" existe déjà :\nil a été renommé en \"{candidats_rootfolder_PREFIX}_old_" + t + "\".\n")
+    os.rename(candidats_rootfolder_PREFIX + etab_uai, candidats_rootfolder_PREFIX + "_old_" + t)
 # créer le dossier candidats_UAI
-print(f"🟢 Création du répertoire \"{CANDIDATS_FOLDER_PREFIX + etab_uai}\".\n")
-os.mkdir(CANDIDATS_FOLDER_PREFIX + etab_uai)
+print(f"🟢 Création du répertoire \"{candidats_rootfolder_PREFIX + etab_uai}\".\n")
+os.mkdir(candidats_rootfolder_PREFIX + etab_uai)
 # créer un sous dossier par diplôme
 for diplome in diplomes:
-    folderName  =   CANDIDATS_FOLDER_PREFIX + etab_uai
+    folderName  =   candidats_rootfolder_PREFIX + etab_uai
     folderName  +=  "/"
     folderName  +=  diplome + "-"
     folderName  +=  DIPLOMES_COURTS[diplome]
@@ -361,14 +426,14 @@ touche()
 # pour mémoire :
 # candidats = [ [ 'Nom', 'Prénom', 'Date de Naissance', 'N° Candidat', 'Division', 'Code' ], etc. ]
 # + variables "globales" : session ; etab_nom ; etab_uai
-# arbo =    .    /    CANDIDATS_FOLDER_PREFIX + etab_uai    /    diplome + "-" DIPLOMES_COURTS[diplome]
+# arbo =    .    /    candidats_rootfolder_PREFIX + etab_uai    /    diplome + "-" DIPLOMES_COURTS[diplome]
 # arbo =    .    /    candidats_0921500F         /    31212-bacpro_MA
 # nom+prenom+code+ncandidat.xlsx
 info("Traitement : création des fichiers individuels des candidats")
 for candidat in candidats:
     ################################################################
     # copie du fichier 'modèle' vers le fichier 'candidat' dans le bon sous-dossier
-    folder      =  "./" + CANDIDATS_FOLDER_PREFIX + etab_uai + "/"
+    folder      =  "./" + candidats_rootfolder_PREFIX + etab_uai + "/"
     folder      += candidat[5] + "-"
     folder      += DIPLOMES_COURTS[candidat[5]] + "/"
     filename    =  sanitize(candidat[0]) + "+"
@@ -417,7 +482,7 @@ msg_fin = f"""
 
 🟢 Les fichiers des candidats sont créés :
 
-Dans le dossier "{CANDIDATS_FOLDER_PREFIX}{etab_uai}", un sous-dossier est
+Dans le dossier "{candidats_rootfolder_PREFIX}{etab_uai}", un sous-dossier est
 préparé par diplôme.
 Chacun d'entre eux contient les fichiers individuels des candidats,
 avec les informations nominatives mises à jour.
