@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 #
 # module setup.py
-# v2023-02-07f
-# 🟢⚠❌📌‼❓🔷👉⌨️
+# v2023-02-08a
 
 
 ################################################################
@@ -21,27 +20,26 @@ TEMPLATES_FOLDER            = 'MODELES'
 CYCLADE_PREFIX              = "cyclade"  # les fichiers CSV exportés de Cyclade doivent être commencés par ...
 
 # diplômes possibles :
-DIPLOMES                    = { '31212': "Métiers de l'accueil",
-                                '31213': "Met.com.ven.op.A Ani.ges.esp.com.",
-                                '31214': "Met.com.ven.Op.B Pr.cl.va.of.com.",
-                                '31224': "CAP Équipier polyvalent du commerce"}  # !!todo!! : vérifier code CAP EPC
+DIPLOMES                    = { '31212': "Bac pro Métiers de l'accueil",
+                                '31213': "Bac pro Met.com.ven.op.A Ani.ges.esp.com.",
+                                '31214': "Bac pro Met.com.ven.Op.B Pr.cl.va.of.com.",
+                                '31224': "CAP Équipier polyvalent du commerce"}
 
 DIPLOMES_COURTS             = { '31212': "bacpro_MA",
                                 '31213': "bacpro_MVC_A_AGEC",
                                 '31214': "bacpro_MVC_B_PC",
-                                '31224': "CAP_EPC"}                              # !!todo!! : vérifier code CAP EPC
+                                '31224': "CAP_EPC"}
 
 # fichiers "modèles" candidats :
 CANDIDATS_TEMPLATE_SHEET    = '1-Candidat, établissement'
-CANDIDATS_TEMPLATE_DICT     = { 'session': 'A3',
-                                'etab': 'A4',
-                                'UAI': 'A5',
-
-                                'nom': 'A7',
-                                'prenom': 'A8',
-                                'daten': 'A9',
-                                'numcandidat': 'A10',
-                                'division': 'A11'}  # !!PB!! à modifier !
+CANDIDATS_TEMPLATE_DICT     = { 'session': 'G2',
+                                'etab': 'E38',
+                                'UAI': 'E39',
+                                'nom': 'E26',
+                                'prenom': 'E28',
+                               #'daten': 'A9',
+                                'numcandidat': 'E30',
+                                'division': 'E36'}
 
 # dictionnaire de correspondance entre
 #      ->   fichiers individuels des candidats
@@ -89,14 +87,16 @@ CORRESPONDANCE_CANDIDATS_SYNTHESE = {
     
     '31224': {
        #'champ' : [ [feuille_source, cellule_source], [feuille_destination, première_ligne_des_données, colonne ] ]
-        'nom':      [ ['1-Candidat, établissement', 'A7'], ['RECAPNOTES', 12, 2] ],
-        'prenom':   [ ['1-Candidat, établissement', 'A8'],  ['RECAPNOTES', 12, 3] ],
-       #'date_n':   [ ['1-Candidat, établissement', 'A9'],  ['RECAPNOTES', 12, 2] ],
-        'n_cand':   [ ['1-Candidat, établissement', 'A10'], ['RECAPNOTES', 12, 1] ],
-       #'division': [ ['1-Candidat, établissement', 'A11'], ['RECAPNOTES', 12, 2] ],
-        
-        'notEPx':   [ ['2. EPx', 'B1'], ['RECAPNOTES', 12, 4] ],
-        'notEPy':   [ ['3. EPy', 'B1'], ['RECAPNOTES', 12, 5] ]
+        'nom':      [ ['1-Candidat, établissement', 'E26'], ['RECAPNOTES', 12, 2] ],
+        'prenom':   [ ['1-Candidat, établissement', 'E28'], ['RECAPNOTES', 12, 3] ],
+        'n_cand':   [ ['1-Candidat, établissement', 'E30'], ['RECAPNOTES', 12, 1] ],
+        'noteEP1':  [ ['5- Synthèse', 'Q12'], ['RECAPNOTES', 12, 4] ],
+        'noteEP2':  [ ['5- Synthèse', 'Q16'], ['RECAPNOTES', 12, 5] ],
+        'noteEP3':  [ ['5- Synthèse', 'Q20'], ['RECAPNOTES', 12, 6] ],
+        'pfmp1':  [ ['5- Récapitulatif PFMP', 'B13'], ['PFMP', 10, 5] ],
+        'pfmp2':  [ ['5- Récapitulatif PFMP', 'B14'], ['PFMP', 10, 6] ],
+        'pfmp3':  [ ['5- Récapitulatif PFMP', 'B15'], ['PFMP', 10, 7] ],
+        'pfmp4':  [ ['5- Récapitulatif PFMP', 'B16'], ['PFMP', 10, 8] ]
     }
 
 }

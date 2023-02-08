@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+#!/usr/bin/env python3
 #
 # script consolide_grilles.py
 # v2023-02-07f
@@ -197,7 +198,7 @@ for diplome in etab_diplomes:
     #info("Informations de debug : " + str(data_candidats))
     
     # écriture dans le fichier de synthèse établissement
-    wb_synthese = openpyxl.load_workbook(etab_syntheses[diplome], read_only=False, data_only=True)
+    wb_synthese = openpyxl.load_workbook(etab_syntheses[diplome], read_only=False, data_only=False)  # TODO : vérifier la paramètre data_only
     for k in CORRESPONDANCE_CANDIDATS_SYNTHESE[diplome].keys():
         # k prend ses valeurs dans : 'nom', 'prenom', 'date_n', etc.
         first_line  = CORRESPONDANCE_CANDIDATS_SYNTHESE[diplome][k][1][1]

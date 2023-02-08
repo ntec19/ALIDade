@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 #
 # script genere_grilles_indiv.py
-# v2023-02-07f
-# 🟢⚠❌📌‼❓🔷👉⌨️
+# v2023-02-08a
 # doc openpyxl : https://openpyxl.readthedocs.io
 
 
@@ -259,7 +258,7 @@ for candidat in candidats:
     sheet[CANDIDATS_TEMPLATE_DICT['UAI']]         = etab_uai
     sheet[CANDIDATS_TEMPLATE_DICT['nom']]         = candidat[0]
     sheet[CANDIDATS_TEMPLATE_DICT['prenom']]      = candidat[1]
-    sheet[CANDIDATS_TEMPLATE_DICT['daten']]       = candidat[2]
+    # sheet[CANDIDATS_TEMPLATE_DICT['daten']]       = candidat[2]  <-- pas utilisée ?
     sheet[CANDIDATS_TEMPLATE_DICT['numcandidat']] = candidat[3]
     sheet[CANDIDATS_TEMPLATE_DICT['division']]    = candidat[4]
     # sheet[CANDIDATS_TEMPLATE_DICT['code']]        = candidat[5]
