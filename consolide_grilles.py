@@ -1,9 +1,7 @@
 #!/usr/bin/env python3
-#!/usr/bin/env python3
 #
 # script consolide_grilles.py
-# v2023-02-07f
-# 🟢⚠❌📌‼❓🔷👉⌨️
+# v2023-02-08a
 # doc openpyxl : https://openpyxl.readthedocs.io
 
 

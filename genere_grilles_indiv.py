@@ -5,7 +5,7 @@
 # doc openpyxl : https://openpyxl.readthedocs.io
 
 
-# import du module 'setup', contenant les constantes et fonctions communes
+# import du module 'setup', contenant les constantes et fonctions communes 
 from setup import *
 
 

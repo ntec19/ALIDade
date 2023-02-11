@@ -50,4 +50,76 @@ Le script **`consolidation.py`** permet de parcourir tous les livrets individuel
 
 ----
 
+## Notes, règles et questions...
+
+### Les codes diplômes :
+
+- '31212': "bacpro_MA"
+- '31213': "bacpro_MVC_A_AGEC"
+- '31214': "bacpro_MVC_B_PC"
+- '31224': "CAP_EPC"
+
+### Les noms des fichiers MODELES
+
+```
+    Livret individuel dématérialisé
+=   "fichier Excel candidat"
+=   31224.xlsx  (par exemple, pour le CAP EPC)
+```
+
+```
+    Synthèse établissement
+=   "fichier Excel établissement"
+=   31224_etab.xlsx  (par exemple, pour le CAP EPC)
+```
+
+donc 8 fichiers à préparer, ainsi nommés.
+
+### Contraintes / livret individuel dématérialisé (fichiers `xxxxx.xlsx`)
+
+- Les modification (cellules à modifier avec les valeurs issues de Cyclade)
+doivent être réalisées sur **une seule feuille**, nommée de la même
+manière pour **tous les diplômes**. Généralement : la première feuille du classeur.
+
+- Les reports d'informations (identité du candidat, etc.) sont opérés par formules Excel entre feuilles du même classeur.
+
+### Contraintes / fichier de synthèse établissement (fichiers `xxxxx_etab.xlsx`)
+
+- il doit y avoir une relation 'injective' entre les infos lues dans les livrets des candidats et les cellules d'un candidat sur le fichier de synthèse (contre-exemple : 'nom', 'prénom' -> 'nom prénom').
+
+- le dictionnaire `CORRESPONDANCE_CANDIDATS_SYNTHESE` est un élément-clé :
+
+```
+{   # source :          fichier individuel du candidat
+    # destination :     fichier de synthese établissement
+    
+    '31224': {
+       #'champ' : [ [feuille_source, cellule_source], [feuille_destination, première_ligne_des_données, colonne ] ]
+        'nom':      [ ['1-Candidat, établissement', 'E26'], ['RECAPNOTES', 12, 2] ],
+        'prenom':   [ ['1-Candidat, établissement', 'E28'], ['RECAPNOTES', 12, 3] ],
+        'n_cand':   [ ['1-Candidat, établissement', 'E30'], ['RECAPNOTES', 12, 1] ],
+        'noteEP1':  [ ['5- Synthèse', 'Q12'], ['RECAPNOTES', 12, 4] ],
+        'noteEP2':  [ ['5- Synthèse', 'Q16'], ['RECAPNOTES', 12, 5] ],
+        'noteEP3':  [ ['5- Synthèse', 'Q20'], ['RECAPNOTES', 12, 6] ],
+        'pfmp1':  [ ['5- Récapitulatif PFMP', 'B13'], ['PFMP', 10, 5] ],
+        'pfmp2':  [ ['5- Récapitulatif PFMP', 'B14'], ['PFMP', 10, 6] ],
+        'pfmp3':  [ ['5- Récapitulatif PFMP', 'B15'], ['PFMP', 10, 7] ],
+        'pfmp4':  [ ['5- Récapitulatif PFMP', 'B16'], ['PFMP', 10, 8] ]
+    },
+    
+    '31224': { etc.
+    }
+}
+```
+
+### Contraintes / exports Cyclade (fichiers `cycladeXXX.csv`)
+
+- Il est possible de récupérer de Cyclade un fichier CSV d'export des candidats.
+
+- (à vérifier!) Il semble que les champs exportés ne soient pas toujours identiques : c'est un GROS problème !  
+  Y a-t-il dans Cyclade des options d'export ? Si oui, il faut en choisir une et l'imposer aux établissements.
+- Informations "récupérables" :  
+  `['Nom', 'Prénom', 'Date de Naissance', 'N° Candidat', 'Division', 'Code']` :  
+  sont-elles toutes utiles (DateN non utilisée) ? Suffisantes ?
+
 fin
