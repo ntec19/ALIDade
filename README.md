@@ -9,9 +9,9 @@ _Automatisation pour les Livrets Individuels Dématérialisés, v2023-02-08a_
 ## Objectifs généraux
 
 L'objectif de ces scripts Python est d'automatiser autant que possible le traitement des livrets dématérialisés pour les diplômes suivants :
-- [31212] baccalaureat professionnel "Métiers de l'accueil"
-- [31213] baccalaureat professionnel "Métiers du commerce et de la vente - Option A : Animation et gestion de l'espace commercial"
-- [31214] baccalaureat professionnel "Métiers du commerce et de la vente - Option B : Prospection clientèle et valorisation de l'offre commerciale"
+- [31212] baccalauréat professionnel "Métiers de l'accueil"
+- [31213] baccalauréat professionnel "Métiers du commerce et de la vente - Option A : Animation et gestion de l'espace commercial"
+- [31214] baccalauréat professionnel "Métiers du commerce et de la vente - Option B : Prospection clientèle et valorisation de l'offre commerciale"
 - [31224] CAP "Équipier polyvalent du commerce"
 
 ----
@@ -110,14 +110,6 @@ manière pour **tous les diplômes**. Généralement : la première feuille du c
 }
 ```
 
-### Contraintes / exports Cyclade (fichiers `cycladeXXX.csv`)
-
-- Il est possible de récupérer de Cyclade un fichier CSV d'export des candidats.
-
-- (à vérifier!) Il semble que les champs exportés ne soient pas toujours identiques : c'est un GROS problème !  
-  Y a-t-il dans Cyclade des options d'export ? Si oui, il faut en choisir une et l'imposer aux établissements.
-- Informations "récupérables" :  
-  `['Nom', 'Prénom', 'Date de Naissance', 'N° Candidat', 'Division', 'Code']` :  
-  sont-elles toutes utiles (DateN non utilisée) ? Suffisantes ?
+<br>
 
 fin
