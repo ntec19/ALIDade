@@ -44,8 +44,6 @@ Le script **`genere_grilles_indiv.py`** permet de générer les livrets dématé
 
 ## Temps 2 : consolidation des notes
 
-**à faire :**
-
 Le script **`consolidation.py`** permet de parcourir tous les livrets individuels des candidats présents dans un dossier, de récupérer les notes obtenues et de consolider l'ensemble dans un document unique pourl'établissement.
 
 ----
