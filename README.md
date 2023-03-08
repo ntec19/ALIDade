@@ -113,10 +113,3 @@ manière pour **tous les diplômes**. Généralement : la première feuille du c
 <br>
 
 fin
-
-
-:::spoiler ttt
-
-test
-
-:::
