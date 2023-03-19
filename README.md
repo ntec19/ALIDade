@@ -1,6 +1,6 @@
 # Projet 'ALIDade'
 
-_Automatisation pour les Livrets Individuels Dématérialisés, v2023-02-08a_
+_Automatisation pour les Livrets Individuels Dématérialisés, v20230319_
 
 ![image alidade](https://marine-data.co.uk/wp-content/uploads/2016/03/MD69BC-800x600.1-300x225.png)
 
@@ -45,6 +45,12 @@ Le script **`genere_grilles_indiv.py`** permet de générer les livrets dématé
 ## Temps 2 : consolidation des notes
 
 Le script **`consolidation.py`** permet de parcourir tous les livrets individuels des candidats présents dans un dossier, de récupérer les notes obtenues et de consolider l'ensemble dans un document unique pourl'établissement.
+
+----
+
+## Documentation
+
+Une documentation _orientée utilisateur_ est fournie au format Word à la racine du projet.
 
 ----
 
@@ -109,6 +115,8 @@ manière pour **tous les diplômes**. Généralement : la première feuille du c
     }
 }
 ```
+
+- deux fichiers d'export Cyclades fictifs sont fournis, pour exemple _(cyclade1.csv, cyclade2.csv)_.
 
 <br>
 

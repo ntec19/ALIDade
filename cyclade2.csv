@@ -1,0 +1,14 @@
+2023;;;;;;;;;;;;;;
+Listes simples;;;;;;;;;;;;;;
+LYC TEST – VILLEFICTIVE  (0921234A);;;;;;;;;;;;;;
+Type d'édition : Liste simple;;;;;;;;;;;;;;
+Edité le 11/02/2023 00:18;;;;;;;;;;;;;;
+Critères de recherche : Division de classe Egal TEPC Etat Egal Inscrit INE Renseigné (non vide) Nom de famille N'est pas égal à azertyu Spécialité Egal Équipier polyvalent du commerce (31224);;;;;;;;;;;;;;
+Critères de regroupement : Division de classe;;;;;;;;;;;;;;
+Critères de tris : Nom et prénom, Date de naissance;;;;;;;;;;;;;;
+Division de classe;N° Candidat;N° Inscription;N° Océan;Nom de famille;Nom d'usage;Prénom(s);Date de Naissance;Division de classe;INE;Catégorie Candidat;Code Spécialité;Spécialité;Etat;Enseignements
+'TEPC';2062259040;001 Version 3; -;AUBRY; -;Mathilde;27/10/2001;'TEPC';190295441EE;SCOLAIRE CAP EN 2 ANS (122);31224;Équipier polyvalent du commerce;Inscrit;Non renseigné
+'TEPC';2079948186;003 Version 2; -;GARNIER; -;Patricia;25/04/2005;'TEPC';900454202JG;SCOLAIRE CAP EN 2 ANS (122);31224;Équipier polyvalent du commerce;Inscrit;Non renseigné
+'TEPC';1967972292;002 Version 2; -;LESAGE; -;Claudine;09/10/2005;'TEPC';550572200HE;SCOLAIRE CAP EN 2 ANS (122);31224;Équipier polyvalent du commerce;Inscrit;Non renseigné
+'TEPC';2220259066;001 Version 2; -;PAYET; -;Jérôme;14/12/2006;'TEPC';403042823AC;SCOLAIRE CAP EN 2 ANS (122);31224;Équipier polyvalent du commerce;Inscrit;Non renseigné
+'TEPC';2077259143;001 Version 2; -;RIVIÈRE; -;Éric;31/05/2006;'TEPC';550182109FC;SCOLAIRE CAP EN 2 ANS (122);31224;Équipier polyvalent du commerce;Inscrit;Non renseigné
