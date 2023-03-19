@@ -32,10 +32,10 @@ DIPLOMES_COURTS             = { '31212': "bacpro_MA",
 
 # fichiers "modèles" candidats :
 CANDIDATS_TEMPLATE_SHEET    = '1-Candidat, établissement'
-CANDIDATS_TEMPLATE_DICT     = { 'nom': 'E26',
-                                'prenom': 'E28',
-                                'numcandidat': 'E30',
-                                'division': 'E36'#,
+CANDIDATS_TEMPLATE_DICT     = { 'nom': 'E17',
+                                'prenom': 'E19',
+                                'numcandidat': 'E21',
+                                'division': 'E27'#,
                                 #'session': 'G2',   -> à personnaliser manuellement
                                 #'etab': 'E29',     -> à personnaliser manuellement
                                 #'UAI': 'E29',      -> à personnaliser manuellement
@@ -109,7 +109,7 @@ CORRESPONDANCE_CANDIDATS_SYNTHESE = {
         'pfmp2':    [ ['5- Récapitulatif PFMP', 'C16'], ['PFMP', 10, 6] ],
         'pfmp3':    [ ['5- Récapitulatif PFMP', 'C17'], ['PFMP', 10, 7] ],
         'pfmp4':    [ ['5- Récapitulatif PFMP', 'C18'], ['PFMP', 10, 8] ],
-        'pfmp5':    [ ['5- Récapitulatif PFMP', 'C19'], ['PFMP', 10, 9] ]
+        'pfmp5':    [ ['5- Récapitulatif PFMP', 'C19'], ['PFMP', 10, 9] ],
         'pfmp6':    [ ['5- Récapitulatif PFMP', 'C20'], ['PFMP', 10, 10] ]
     }
 

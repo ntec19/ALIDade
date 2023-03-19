@@ -248,17 +248,18 @@ for candidat in candidats:
     # personnalisation des fichiers candidats (insertion des valeurs)
     # pour mémoire :
     # clés de CANDIDATS_TEMPLATE_DICT :
-    # 'session', 'etab', 'UAI', 'nom', 'prenom', 'daten', 'numcandidat', 'division', 'code'
+    # 'nom', 'prenom', 'numcandidat', 'division'
+    # NON : 'session', 'etab', 'UAI', 'daten', 'code'
     # pour mémoire :
     # candidats = [ [ 'Nom', 'Prénom', 'Date de Naissance', 'N° Candidat', 'Division', 'Code' ], etc. ]
     wb = openpyxl.load_workbook(destination, read_only=False)
     sheet = wb[CANDIDATS_TEMPLATE_SHEET]
-    sheet[CANDIDATS_TEMPLATE_DICT['session']]     = session
-    sheet[CANDIDATS_TEMPLATE_DICT['etab']]        = etab_nom
-    sheet[CANDIDATS_TEMPLATE_DICT['UAI']]         = etab_uai
+    #sheet[CANDIDATS_TEMPLATE_DICT['session']]     = session
+    #sheet[CANDIDATS_TEMPLATE_DICT['etab']]        = etab_nom
+    #sheet[CANDIDATS_TEMPLATE_DICT['UAI']]         = etab_uai
     sheet[CANDIDATS_TEMPLATE_DICT['nom']]         = candidat[0]
     sheet[CANDIDATS_TEMPLATE_DICT['prenom']]      = candidat[1]
-    # sheet[CANDIDATS_TEMPLATE_DICT['daten']]       = candidat[2]  <-- pas utilisée ?
+    # sheet[CANDIDATS_TEMPLATE_DICT['daten']]       = candidat[2]
     sheet[CANDIDATS_TEMPLATE_DICT['numcandidat']] = candidat[3]
     sheet[CANDIDATS_TEMPLATE_DICT['division']]    = candidat[4]
     # sheet[CANDIDATS_TEMPLATE_DICT['code']]        = candidat[5]
