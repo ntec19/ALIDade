@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #
 # script genere_grilles_indiv.py
-# v20230319
+# v20230323
 # doc openpyxl : https://openpyxl.readthedocs.io
 
 
@@ -78,7 +78,7 @@ if len(files_cyclade) == 0:
 # construire une liste "candidats" à partir de tous les fichiers Cyclade
 candidats = []
 for data in files_cyclade:
-    with open(data, encoding='utf-8-sig') as f:
+    with open(data, encoding='utf-8-sig') as f:     # utf-8-sig car le fichier Cyclades est encodé en utf-8 avec BOM
         reader = list(csv.reader(f, delimiter=';', quotechar="'"))
         # liste de liste ; reader[r] : chaque ligne ; reader[r][c] : chaque cellule
         session     = reader[0][0]
@@ -148,11 +148,30 @@ if len(diplomes) == 0:
 
 
 ################################################################
-# tous les éléments de la liste 'diplomes' doivent être dans les clés du dictionnaire 'DIPLOMES' (cf. constantes)
+# analyse : chaque diplôme dans la liste 'diplomes' est-il dans les clés du dictionnaire 'DIPLOMES' ?
+# sinon : message d'avertissement, mais on continue...
 for diplome in diplomes:
     if not (diplome in DIPLOMES.keys()):
-        print(f"Un diplôme inconnu est trouvé : {diplome}.")
-        sys.exit(6)
+        print(f"⚠️ diplôme inconnu trouvé : {diplome} (non pris en charge)")
+        # sys.exit(6)
+        # pas de fin de script si code diplôme inconu, mais message d'avertissement
+
+
+################################################################
+# Ne conserver dans la liste que les codes de diplômes présents dans les clés du dictionnaire 'DIPLOMES'
+# NB : aurait pu être fait ci-dessus, cf # extraction des diplômes qui concernent l'établissement
+diplomes_tout = diplomes.copy()
+diplomes = []
+for diplome in diplomes_tout:
+    if diplome in DIPLOMES.keys():
+        diplomes.append(diplome)
+
+
+################################################################
+# la liste 'diplomes' ne doit pas être vide (bis ;-)
+if len(diplomes) == 0:
+    print(f"❌ Un problème est survenu (pas de diplôme conforme trouvé) !\n")
+    sys.exit(5)
 
 
 ################################################################
@@ -247,22 +266,16 @@ for candidat in candidats:
     ################################################################
     # personnalisation des fichiers candidats (insertion des valeurs)
     # pour mémoire :
-    # clés de CANDIDATS_TEMPLATE_DICT :
-    # 'nom', 'prenom', 'numcandidat', 'division'
-    # NON : 'session', 'etab', 'UAI', 'daten', 'code'
+    # clés de CANDIDATS_TEMPLATE_DICT : 'nom', 'prenom', 'numcandidat', 'division', 'etab'
     # pour mémoire :
     # candidats = [ [ 'Nom', 'Prénom', 'Date de Naissance', 'N° Candidat', 'Division', 'Code' ], etc. ]
     wb = openpyxl.load_workbook(destination, read_only=False)
     sheet = wb[CANDIDATS_TEMPLATE_SHEET]
-    #sheet[CANDIDATS_TEMPLATE_DICT['session']]     = session
-    #sheet[CANDIDATS_TEMPLATE_DICT['etab']]        = etab_nom
-    #sheet[CANDIDATS_TEMPLATE_DICT['UAI']]         = etab_uai
+    sheet[CANDIDATS_TEMPLATE_DICT['etab']]        = etab_uai + " (" + etab_nom + ")"
     sheet[CANDIDATS_TEMPLATE_DICT['nom']]         = candidat[0]
     sheet[CANDIDATS_TEMPLATE_DICT['prenom']]      = candidat[1]
-    # sheet[CANDIDATS_TEMPLATE_DICT['daten']]       = candidat[2]
     sheet[CANDIDATS_TEMPLATE_DICT['numcandidat']] = candidat[3]
     sheet[CANDIDATS_TEMPLATE_DICT['division']]    = candidat[4]
-    # sheet[CANDIDATS_TEMPLATE_DICT['code']]        = candidat[5]
     wb.save(destination)
     wb.close()
     ################################################################
@@ -285,7 +298,7 @@ préparé par diplôme.
 Chacun d'entre eux contient les fichiers individuels des candidats,
 avec les informations nominatives mises à jour.
 
-That's all folks!
+~~~~~~~~~~~~~~~~~
 
 """
 

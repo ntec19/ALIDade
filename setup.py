@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #
 # module setup.py 
-# v20230319
+# v20230323
 
 
 ################################################################
@@ -27,7 +27,7 @@ DIPLOMES                    = { '31212': "Bac pro Métiers de l'accueil",
 
 DIPLOMES_COURTS             = { '31212': "bacpro_MA",
                                 '31213': "bacpro_MVC_A_AGEC",
-                                '31214': "bacpro_MVC_B_PC",
+                                '31214': "bacpro_MVC_B_PVOC",
                                 '31224': "CAP_EPC"}
 
 # fichiers "modèles" candidats :
@@ -35,10 +35,9 @@ CANDIDATS_TEMPLATE_SHEET    = '1-Candidat, établissement'
 CANDIDATS_TEMPLATE_DICT     = { 'nom': 'E17',
                                 'prenom': 'E19',
                                 'numcandidat': 'E21',
-                                'division': 'E27'#,
-                                #'session': 'G2',   -> à personnaliser manuellement
-                                #'etab': 'E29',     -> à personnaliser manuellement
-                                #'UAI': 'E29',      -> à personnaliser manuellement
+                                'division': 'E27',
+                                'etab': 'E29'       # dans cette cellule : "UAI + établissement",
+                                #'session': 'G2',   -> info déjà présente
                                 #'daten': 'A9',     -> non utilisé                                
                                 }
 

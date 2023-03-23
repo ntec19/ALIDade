@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #
 # script consolide_grilles.py
-# v20230319
+# v20230323
 # doc openpyxl : https://openpyxl.readthedocs.io
 
 
@@ -221,7 +221,7 @@ préparé par diplôme.
 Chacun d'entre eux contient la consolidation des informations
 des candidats : état civil, numéro de candidat, notes, etc.
 
-That's all folks again!
+~~~~~~~~~~~~~~~~~
 
 """
 

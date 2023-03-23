@@ -1,6 +1,6 @@
 # Projet 'ALIDade'
 
-_Automatisation pour les Livrets Individuels Dématérialisés, v20230319_
+_Automatisation pour les Livrets Individuels Dématérialisés, v20230323_
 
 ![image alidade](https://marine-data.co.uk/wp-content/uploads/2016/03/MD69BC-800x600.1-300x225.png)
 
@@ -50,7 +50,7 @@ Le script **`consolidation.py`** permet de parcourir tous les livrets individuel
 
 ## Documentation
 
-Une documentation _orientée utilisateur_ est fournie au format Word à la racine du projet.
+Une documentation _orientée utilisateur_ est fournie au format Word à la racine du projet : `0_documentation.docx`
 
 ----
 
@@ -60,7 +60,7 @@ Une documentation _orientée utilisateur_ est fournie au format Word à la racin
 
 - '31212': "bacpro_MA"
 - '31213': "bacpro_MVC_A_AGEC"
-- '31214': "bacpro_MVC_B_PC"
+- '31214': "bacpro_MVC_B_PVOC"
 - '31224': "CAP_EPC"
 
 ### Les noms des fichiers MODELES
