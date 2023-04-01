@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #
 # script genere_grilles_indiv.py
-# v20230323
+# v20230401
 # doc openpyxl : https://openpyxl.readthedocs.io
 
 
@@ -245,47 +245,50 @@ touche()
 # nom+prenom+code+ncandidat.xlsx
 info("Traitement : création des fichiers individuels des candidats")
 for candidat in candidats:
-    ################################################################
-    # copie du fichier 'modèle' vers le fichier 'candidat' dans le bon sous-dossier
-    folder      =  "./" + CANDIDATS_FOLDER_PREFIX + etab_uai + "/"
-    folder      += candidat[5] + "-"
-    folder      += DIPLOMES_COURTS[candidat[5]] + "/"
-    filename    =  sanitize(candidat[0]) + CHAR_SEP
-    filename    += sanitize(candidat[1]) + CHAR_SEP
-    filename    += candidat[5] + CHAR_SEP
-    filename    += candidat[3] + ".xlsx"
-    # exemple source :
-    #   ./MODELES/31212.xlsx
-    # exemple destination :
-    #   ./0921234A_candidats/31212-bacpro_MA/DURAND+Clara+31212+06916557742.xlsx
-    source      = './' + TEMPLATES_FOLDER + '/' + candidat[5] + ".xlsx"
-    destination = folder + filename
-    shutil.copyfile(source, destination)
-    time.sleep(TEMPO)  # pour 'terminer' l'écriture du fichier
 
-    ################################################################
-    # personnalisation des fichiers candidats (insertion des valeurs)
-    # pour mémoire :
-    # clés de CANDIDATS_TEMPLATE_DICT : 'nom', 'prenom', 'numcandidat', 'division', 'etab'
-    # pour mémoire :
-    # candidats = [ [ 'Nom', 'Prénom', 'Date de Naissance', 'N° Candidat', 'Division', 'Code' ], etc. ]
-    wb = openpyxl.load_workbook(destination, read_only=False)
-    sheet = wb[CANDIDATS_TEMPLATE_SHEET]
-    sheet[CANDIDATS_TEMPLATE_DICT['etab']]        = etab_uai + " (" + etab_nom + ")"
-    sheet[CANDIDATS_TEMPLATE_DICT['nom']]         = candidat[0]
-    sheet[CANDIDATS_TEMPLATE_DICT['prenom']]      = candidat[1]
-    sheet[CANDIDATS_TEMPLATE_DICT['numcandidat']] = candidat[3]
-    sheet[CANDIDATS_TEMPLATE_DICT['division']]    = candidat[4]
-    wb.save(destination)
-    wb.close()
-    ################################################################
-    # affichage rassurant ;-)
-    print("\n" + "-" * 32)
-    print(f"Candidat traité : {candidat[0]} {candidat[1]}, né(e) le {candidat[2]}")
-    print(f"    Diplôme : {DIPLOMES_COURTS[candidat[5]]} (code : {candidat[5]})")
-    print(f"    Division : {candidat[4]} - Numéro de candidat : {candidat[3]}")
-    print(f"    Nom du dossier : {folder}")
-    print(f"    Nom du fichier : {filename}")
+    if candidat[5] in diplomes:
+        ################################################################
+        # copie du fichier 'modèle' vers le fichier 'candidat' dans le bon sous-dossier
+        folder      =  "./" + CANDIDATS_FOLDER_PREFIX + etab_uai + "/"
+        folder      += candidat[5] + "-"
+        folder      += DIPLOMES_COURTS[candidat[5]] + "/"
+        filename    =  sanitize(candidat[0]) + CHAR_SEP
+        filename    += sanitize(candidat[1]) + CHAR_SEP
+        filename    += candidat[5] + CHAR_SEP
+        filename    += candidat[3] + ".xlsx"
+        # exemple source :
+        #   ./MODELES/31212.xlsx
+        # exemple destination :
+        #   ./0921234A_candidats/31212-bacpro_MA/DURAND+Clara+31212+06916557742.xlsx
+        source      = './' + TEMPLATES_FOLDER + '/' + candidat[5] + ".xlsx"
+        destination = folder + filename
+        shutil.copyfile(source, destination)
+        time.sleep(TEMPO)  # pour 'terminer' l'écriture du fichier
+
+        ################################################################
+        # personnalisation des fichiers candidats (insertion des valeurs)
+        # pour mémoire :
+        # clés de CANDIDATS_TEMPLATE_DICT : 'nom', 'prenom', 'numcandidat', 'division', 'etab'
+        # pour mémoire :
+        # candidats = [ [ 'Nom', 'Prénom', 'Date de Naissance', 'N° Candidat', 'Division', 'Code' ], etc. ]
+        wb = openpyxl.load_workbook(destination, read_only=False)
+        sheet = wb[CANDIDATS_TEMPLATE_SHEET]
+        sheet[CANDIDATS_TEMPLATE_DICT['etab']]        = etab_uai + " (" + etab_nom + ")"
+        sheet[CANDIDATS_TEMPLATE_DICT['nom']]         = candidat[0]
+        sheet[CANDIDATS_TEMPLATE_DICT['prenom']]      = candidat[1]
+        sheet[CANDIDATS_TEMPLATE_DICT['numcandidat']] = candidat[3]
+        sheet[CANDIDATS_TEMPLATE_DICT['division']]    = candidat[4]
+        wb.save(destination)
+        wb.close()
+        ################################################################
+        # affichage rassurant ;-)
+        print("\n" + "-" * 32)
+        print(f"Candidat traité : {candidat[0]} {candidat[1]}, né(e) le {candidat[2]}")
+        print(f"    Diplôme : {DIPLOMES_COURTS[candidat[5]]} (code : {candidat[5]})")
+        print(f"    Division : {candidat[4]} - Numéro de candidat : {candidat[3]}")
+        print(f"    Nom du dossier : {folder}")
+        print(f"    Nom du fichier : {filename}")
+
 
 ################################################################
 # affichage final

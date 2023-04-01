@@ -1,6 +1,6 @@
 # Projet 'ALIDade'
 
-_Automatisation pour les Livrets Individuels Dématérialisés, v20230323_
+_Automatisation pour les Livrets Individuels Dématérialisés, v20230401_
 
 ![image alidade](https://marine-data.co.uk/wp-content/uploads/2016/03/MD69BC-800x600.1-300x225.png)
 
@@ -116,7 +116,7 @@ manière pour **tous les diplômes**. Généralement : la première feuille du c
 }
 ```
 
-- deux fichiers d'export Cyclades fictifs sont fournis, pour exemple _(cyclade1.csv, cyclade2.csv)_.
+- deux fichiers d'export Cyclades fictifs sont fournis, pour exemple : _cyclade1.csv, cyclade2.csv_.
 
 <br>
 
