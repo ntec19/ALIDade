@@ -221,7 +221,6 @@ préparé par diplôme.
 Chacun d'entre eux contient la consolidation des informations
 des candidats : état civil, numéro de candidat, notes, etc.
 
-~~~~~~~~~~~~~~~~~
 
 """
 

@@ -301,7 +301,6 @@ préparé par diplôme.
 Chacun d'entre eux contient les fichiers individuels des candidats,
 avec les informations nominatives mises à jour.
 
-~~~~~~~~~~~~~~~~~
 
 """
 
