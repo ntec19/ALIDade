@@ -118,6 +118,20 @@ manière pour **tous les diplômes**. Généralement : la première feuille du c
 
 - deux fichiers d'export Cyclades fictifs sont fournis, pour exemple : _cyclade1.csv, cyclade2.csv_.
 
+### Remarques concernant le traitement des fichiers Excel par la bibliothèque Python 'openpyxl' :
+
+- Les éléments de contrôle de formulaire (case à cochern menu déroulant, etc.) ne sont pas supportés _(barre d'outils 'Développeur')_ : ils sont supprimés à l'enregistrement.
+
+- Les zones de texte et autres _WordArt_ ne sont pas supportés _(barre d'outils 'Développeur')_ : ils sont supprimés à l'enregistrement.
+
+- La valaidation de données n'est pas supportée : elle est supprimée à l'enregistrement.
+
+- Les images sont correctement supportées.
+
+- Les formules sont _(heureusement)_ conservées.
+
+- Les protections éventuelles (feuilles, classeur) sont conservées.
+
 <br>
 
 fin
