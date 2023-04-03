@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #
 # script genere_grilles_indiv.py
-# v20230401
+# v20230403
 # doc openpyxl : https://openpyxl.readthedocs.io
 
 

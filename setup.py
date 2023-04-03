@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #
 # module setup.py 
-# v20230401
+# v20230403
 
 
 ################################################################
@@ -56,6 +56,7 @@ CORRESPONDANCE_CANDIDATS_SYNTHESE = {
         'n_cand':   [ ['1-Candidat, établissement', 'E21'], ['RECAPNOTES', 12, 1] ],
         'E31':      [ ['4- Synthèse', 'Q12'], ['RECAPNOTES', 12, 4] ],
         'E32':      [ ['4- Synthèse', 'Q16'], ['RECAPNOTES', 12, 5] ],
+        'pfmpdéro': [ ['5- Récapitulatif PFMP', 'D11'], ['PFMP', 10, 4] ],
         'pfmp1':    [ ['5- Récapitulatif PFMP', 'C14'], ['PFMP', 10, 5] ],
         'pfmp2':    [ ['5- Récapitulatif PFMP', 'C15'], ['PFMP', 10, 6] ],
         'pfmp3':    [ ['5- Récapitulatif PFMP', 'C16'], ['PFMP', 10, 7] ],
@@ -72,6 +73,7 @@ CORRESPONDANCE_CANDIDATS_SYNTHESE = {
         'E31':      [ ['4- Synthèse', 'Q12'], ['RECAPNOTES', 12, 4] ],
         'E32':      [ ['4- Synthèse', 'Q16'], ['RECAPNOTES', 12, 5] ],
         'E33':      [ ['4- Synthèse', 'Q20'], ['RECAPNOTES', 12, 6] ],
+        'pfmpdéro': [ ['5- Récapitulatif PFMP', 'E11'], ['PFMP', 10, 4] ],
         'pfmp1':    [ ['5- Récapitulatif PFMP', 'D14'], ['PFMP', 10, 5] ],
         'pfmp2':    [ ['5- Récapitulatif PFMP', 'D15'], ['PFMP', 10, 6] ],
         'pfmp3':    [ ['5- Récapitulatif PFMP', 'D16'], ['PFMP', 10, 7] ],
@@ -88,6 +90,7 @@ CORRESPONDANCE_CANDIDATS_SYNTHESE = {
         'E31':      [ ['4- Synthèse', 'Q12'], ['RECAPNOTES', 12, 4] ],
         'E32':      [ ['4- Synthèse', 'Q16'], ['RECAPNOTES', 12, 5] ],
         'E33':      [ ['4- Synthèse', 'Q20'], ['RECAPNOTES', 12, 6] ],
+        'pfmpdéro': [ ['5- Récapitulatif PFMP', 'E11'], ['PFMP', 10, 4] ],
         'pfmp1':    [ ['5- Récapitulatif PFMP', 'D14'], ['PFMP', 10, 5] ],
         'pfmp2':    [ ['5- Récapitulatif PFMP', 'D15'], ['PFMP', 10, 6] ],
         'pfmp3':    [ ['5- Récapitulatif PFMP', 'D16'], ['PFMP', 10, 7] ],
@@ -104,6 +107,7 @@ CORRESPONDANCE_CANDIDATS_SYNTHESE = {
         'noteEP1':  [ ['5- Synthèse', 'Q12'], ['RECAPNOTES', 12, 4] ],
         'noteEP2':  [ ['5- Synthèse', 'Q16'], ['RECAPNOTES', 12, 5] ],
         'noteEP3':  [ ['5- Synthèse', 'Q20'], ['RECAPNOTES', 12, 6] ],
+        'pfmpdéro': [ ['5- Récapitulatif PFMP', 'C12'], ['PFMP', 10, 4] ],
         'pfmp1':    [ ['5- Récapitulatif PFMP', 'C15'], ['PFMP', 10, 5] ],
         'pfmp2':    [ ['5- Récapitulatif PFMP', 'C16'], ['PFMP', 10, 6] ],
         'pfmp3':    [ ['5- Récapitulatif PFMP', 'C17'], ['PFMP', 10, 7] ],
