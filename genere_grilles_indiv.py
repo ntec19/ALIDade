@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 #
 # script genere_grilles_indiv.py
-# v20230403
+# v20230405
 # doc openpyxl : https://openpyxl.readthedocs.io
 
 
@@ -82,9 +82,43 @@ for data in files_cyclade:
         reader = list(csv.reader(f, delimiter=';', quotechar="'"))
         # liste de liste ; reader[r] : chaque ligne ; reader[r][c] : chaque cellule
         session     = reader[0][0]
-        etab        = reader[2][0]
+        
+        
+        # modification du script pour la prise en compte du problème suivant :
+        # dans certains exports Cyclades, une info s'intercale en ligne 2 : "BACCALAURÉAT PROFESSIONNEL;;;;;;;;;;;;;;"
+        # ce qui engendre un décalage de ligne.
+        # 
+        #     situation analysée initialement :
+        # 2023;;;;;;;;;;;;;; 
+        # Listes simples;;;;;;;;;;;;;;
+        # LYC TEST – VILLEFICTIVE  (0921234A);;;;;;;;;;;;;;     <---- ligne 3 (n°2)
+        # Type d'édition : Liste simple;;;;;;;;;;;;;;        
+        # 
+        #     solution apparue dans certains établissements :
+        # 2023;;;;;;;;;;;;;; 
+        # BACCALAURÉAT PROFESSIONNEL;;;;;;;;;;;;;;
+        # Listes simples;;;;;;;;;;;;;;
+        # LYC TEST – VILLEFICTIVE  (0921234A);;;;;;;;;;;;;;     <---- ligne 4 (n°3)
+        # Type d'édition : Liste simple;;;;;;;;;;;;;;
+        # 
+        # solution : calculer un 'delta'
+        # par rapport à la présence de '(' dans la ligne :
+        
+        if      '(' in reader[2][0]:
+            delta = 0
+        elif    '(' in reader[3][0]:
+            delta = 1
+        else:
+            print(f"❌ Problème dans le format de l'export Cyclades : {data}\n")
+            sys.exit(3)
+        
+        etab        = reader[2+delta][0]
         etab_nom    = etab.split('(')[0][:-1]
         etab_uai    = etab.split('(')[1][:-1]
+        
+        print("|||", data, "|||", delta, "|||", etab_nom, "|||", etab_uai, "|||")
+        touche()
+        
         ''' les données sont structurées ainsi :
         ['Division de classe', 'N° Candidat', 'N° Inscription', 'N° Océan', 'Nom de famille',
         "Nom d'usage", 'Prénom(s)', 'Date de Naissance', 'Division de classe', 'INE',
@@ -95,7 +129,7 @@ for data in files_cyclade:
         ' -', 'Bryan', '09/03/2005', 'TMA', '081277848GG',
         'SCOLAIRE BACPRO 3 ANS (132)', '31212', 'Métiers de l'accueil',
         'Inscrit', 'Non renseigné'] '''
-        reader = reader[9:]     # les données commencent à la ligne 10
+        reader = reader[9+delta:]     # les données commencent à la ligne 10+delta
         for line in reader:
             # candidat : liste au format
             # ['Nom', 'Prénom', 'Date de Naissance', 'N° Candidat', 'Division', 'Code']
