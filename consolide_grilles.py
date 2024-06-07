@@ -186,7 +186,7 @@ for diplome in etab_diplomes:
         candidat = {}  # contiendra les données du candidat
         # print("\tOn traite le fichier :", file)
         # on ouvre le fichier 'file' avec openpyxl
-        print(f"Fichier traité -> {file}")
+        print(f"Fichier traité -> {file}")  # ligne pour debug, à supprimer ensuite
         wb_candidat = openpyxl.load_workbook(candidats_folders[diplome]+'/'+file, read_only=True, data_only=True)
         for k in CORRESPONDANCE_CANDIDATS_SYNTHESE[diplome].keys():
             # CORRESPONDANCE_CANDIDATS_SYNTHESE[diplome][k] -> [['1-Candidat, établissement', 'A7'], ['RECAPNOTES', 12, 2]]
